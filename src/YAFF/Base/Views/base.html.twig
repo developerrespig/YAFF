@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
+<head>
+    <meta charset="UTF-8"/>
+    <title>{% block title %}YAFF{% endblock %}</title>
+    <meta name="description" content="{% block description %}Welcome!{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}{% endblock %}">
+    <!--<link rel="icon" type="image/x-icon" href="" />-->
+</head>
+<body>
+{% block body %}
+
+    {% block content %}{% endblock %}
+
+{% endblock %}
+</body>
+</html>
