@@ -1,4 +1,5 @@
 <?php
+    $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 	$app->register(new Silex\Provider\ServiceControllerServiceProvider());
 
 	// Twig Service Provider

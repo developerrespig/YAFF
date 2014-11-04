@@ -9,5 +9,5 @@
 {% endblock %}
 
 {% block content %}
-	Hello World
+	Hello World - <a href="{{ path('yaff.fhem.getValues', {device: 'WetterDresden'}) }}">TEST</a>
 {% endblock %}
