@@ -3,4 +3,6 @@
 	
 	require_once 'config/ServiceProvider.php';
 	require_once 'config/Routing.php';
+        require_once 'config/Database.php';
+        require_once 'config/Security.php';
 ?>

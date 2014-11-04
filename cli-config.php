@@ -1,0 +1,1 @@
+<?php// cli-config.phprequire_once 'vendor/autoload.php';require_once "bootstrap.php";//$app->run();$entityManager = $app['orm.em'];return \Doctrine\ORM\Tools\Console\ConsoleRunner::createHelperSet($entityManager);// vendor\bin\doctrine.php.bat orm:schema-tool:update

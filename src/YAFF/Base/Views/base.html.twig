@@ -5,6 +5,13 @@
     <title>{% block title %}YAFF{% endblock %}</title>
     <meta name="description" content="{% block description %}Welcome!{% endblock %}">
     <meta name="keywords" content="{% block keywords %}{% endblock %}">
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ app.request.basepath }}/resources/css/bootstrap.min.3.3.0.css">
+    {% endblock %}
+    {% block javascripts %}
+        <script type="text/javascript" src="{{ app.request.basepath }}/resources/js/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="{{ app.request.basepath }}/resources/js/bootstrap.min.3.3.0.js"></script>
+    {% endblock %}
     <!--<link rel="icon" type="image/x-icon" href="" />-->
 </head>
 <body>

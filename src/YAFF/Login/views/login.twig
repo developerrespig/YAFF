@@ -1,0 +1,54 @@
+{% extends 'Base/views/base.html.twig' %}
+
+{% block title %}{{ parent() }} -  Login{% endblock %}
+
+{% block description %}{{ parent() }} -  Login{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        if ($("body nav").length > 0) {
+            window.location.href = "{{ path('yaff.overview') }}";
+        } else {
+            $(document).ready(function () {
+                $("body div").removeClass("hidden");
+                $("body p").removeClass("hidden");
+            });
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="row hidden" style="padding-top: 90px;">
+        <div class="col-md-2 col-md-offset-5 well">
+            <legend>YAFF</legend>
+            {% if error %}
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ error }}
+                </div>
+            {% endif %}
+            <form class="" action="{{ path('login_check') }}" method="post">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="_username" value="{{ last_username }}"
+                           placeholder="User"/>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="password" name="_password" value=""
+                           placeholder="Password"/>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="_remember_me"/> remember me
+                    </label>
+                </div>
+                <input class="btn btn-primary btn-block" type="submit" value="login"/>
+            </form>
+        </div>
+    </div>
+    <p class="text-center muted hidden">&copy; Copyright 2014 - YAFF</p>
+
+    <script>
+    </script>
+{% endblock %}
