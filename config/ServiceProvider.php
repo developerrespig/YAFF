@@ -9,4 +9,11 @@
     $app->register(new Silex\Provider\TwigServiceProvider(), array(
             'twig.path' => __DIR__ . '/../src/YAFF'
     ));
-?>
+    
+    // own Service providers
+    $app['csrf_protection'] = $app->share(function ($app) {
+        return new YAFF\Base\Utility\CSRFProtectionService($app);
+    });
+    $app['UserService'] = $app->share(function ($app) {
+        return new YAFF\Users\Service\UserService($app);
+    });

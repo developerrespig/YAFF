@@ -32,7 +32,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             $user = $q->getSingleResult();
         } catch (NoResultException $e) {
             $message = sprintf(
-                'Unable to find an active admin LificityDataBaseBundle:User object identified by "%s".',
+                'Unable to find an active User object identified by "%s".',
                 $username
             );
             throw new UsernameNotFoundException($message, 0, $e);
