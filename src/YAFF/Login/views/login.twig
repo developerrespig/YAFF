@@ -7,7 +7,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        if ($("body nav").length > 0) {
+        if ($("body div .navbar").length > 0) {
             window.location.href = "{{ path('yaff.overview') }}";
         } else {
             $(document).ready(function () {
@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block body %}
-
+<div class="container-fluid">
     <div class="row hidden" style="padding-top: 90px;">
         <div class="col-md-2 col-md-offset-5 well">
             <legend>YAFF</legend>
@@ -48,7 +48,5 @@
         </div>
     </div>
     <p class="text-center muted hidden">&copy; Copyright 2014 - YAFF</p>
-
-    <script>
-    </script>
+</div>
 {% endblock %}
