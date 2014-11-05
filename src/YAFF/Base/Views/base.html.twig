@@ -6,7 +6,7 @@
     <meta name="description" content="{% block description %}Welcome!{% endblock %}">
     <meta name="keywords" content="{% block keywords %}{% endblock %}">
     {% block stylesheets %}
-        <link rel="stylesheet" href="{{ app.request.basepath }}/resources/css/bootstrap.min.3.3.0.css">
+        <link rel="stylesheet" href="{{ app.request.basepath }}/resources/css/bootstrap.paper.min.3.3.0.css">
     {% endblock %}
     {% block javascripts %}
         <script type="text/javascript" src="{{ app.request.basepath }}/resources/js/jquery-2.1.1.min.js"></script>
@@ -16,7 +16,50 @@
 </head>
 <body>
 {% block body %}
+    {% block menu %}
+        <div class="navbar navbar-inverse">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-inverse-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">YAFF</a>
+            </div>
+            <div style="" aria-expanded="true" class="navbar-collapse navbar-inverse-collapse collapse in">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Active</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Willkommen {{ app.security.getToken().getUser().getUsername()}}  <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Action</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    {% endblock %}
 
+    {% block flashMessage %}
+        <div class="container-fluid">
+            <div class="row" id="flash-message-container">
+                {% for type, flashMessages in app.session.flashbag.all() %}
+                    {% for flashMessage in flashMessages %}
+                        <div class="col-md-10 col-md-offset-1">
+                            <div class="alert alert-{{ type }} alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert"
+                                        aria-hidden="true">&times;</button>
+                                {{ flashMessage }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endblock %}
+    
     {% block content %}{% endblock %}
 
 {% endblock %}
