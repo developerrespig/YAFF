@@ -30,7 +30,7 @@ class UserServiceController
         $em = $this->app['orm.em'];
         $users = $em->getRepository("\YAFF\Database\Entity\User")->findAll();
 
-        return $this->app['twig']->render('Users/views/index.html.twig', array(
+        return $this->app['twig']->render('Users/Views/index.html.twig', array(
             "users" => $users
         ));
     }
@@ -45,7 +45,7 @@ class UserServiceController
         $csrf = $this->app['csrf_protection'];
         $roles = $em->getRepository("\YAFF\Database\Entity\Role")->findAll();
 
-        return $this->app['twig']->render('Users/views/user_form_create.html.twig', array(
+        return $this->app['twig']->render('Users/Views/user_form_create.html.twig', array(
             'roles' => $roles,
             'user' => new User(),
             'token' => $csrf->getCSRFTokenForForm()
@@ -84,7 +84,7 @@ class UserServiceController
             }
         }
 
-        return $this->app['twig']->render('Users/views/user_feedback.html.twig', array(
+        return $this->app['twig']->render('Users/Views/user_feedback.html.twig', array(
             "error" => $error
         ));
     }
@@ -102,7 +102,7 @@ class UserServiceController
         $roles = $em->getRepository("\YAFF\Database\Entity\Role")->findAll();
         $user = $em->getRepository("\YAFF\Database\Entity\User")->find($id);
 
-        return $this->app['twig']->render('Users/views/user_form_edit.html.twig', array(
+        return $this->app['twig']->render('Users/Views/user_form_edit.html.twig', array(
             'roles' => $roles,
             'user' => $user,
             'token' => $csrf->getCSRFTokenForForm()
@@ -133,7 +133,7 @@ class UserServiceController
 
         }
 
-        return $this->app['twig']->render('Users/views/user_feedback.html.twig', array(
+        return $this->app['twig']->render('Users/Views/user_feedback.html.twig', array(
             "error" => $error
         ));
     }
@@ -156,7 +156,7 @@ class UserServiceController
             return 'ok';
         } else {
             // initial get load (ask for deleting)
-            return $this->app['twig']->render('Users/views/user_form_delete.html.twig', array(
+            return $this->app['twig']->render('Users/Views/user_form_delete.html.twig', array(
                 "id" => $id,
                 'token' => $csrf->getCSRFTokenForForm()
             ));
