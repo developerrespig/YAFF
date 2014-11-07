@@ -1,0 +1,52 @@
+{% extends 'Base/Views/base.html.twig' %}
+
+{% block title %}{{ 'login.title'|trans }}{% endblock %}
+
+{% block description %}{{ 'login.description'|trans }}{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        if ($("body div .navbar").length > 0) {
+            window.location.href = "{{ path('yaff.overview') }}";
+        } else {
+            $(document).ready(function () {
+                $("body div").removeClass("hidden");
+                $("body p").removeClass("hidden");
+            });
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row hidden" style="padding-top: 90px;">
+        <div class="col-md-2 col-md-offset-5 well">
+            <legend>{{ 'login.title'|trans }}</legend>
+            {% if error %}
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ error|trans }}
+                </div>
+            {% endif %}
+            <form class="" action="{{ path('login_check') }}" method="post">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="_username" value="{{ last_username }}"
+                           placeholder="{{ 'login.username.placeholder'|trans }}"/>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="password" name="_password" value=""
+                           placeholder="{{ 'login.password.placeholder'|trans }}"/>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="_remember_me"/> {{ 'login.rememberme'|trans }}
+                    </label>
+                </div>
+                <input class="btn btn-primary btn-block" type="submit" value="{{ 'login.button.login'|trans }}"/>
+            </form>
+        </div>
+    </div>
+    <p class="text-center muted hidden">&copy; Copyright {{ "now"|date('Y') }} - {{ 'login.copy'|trans }}</p>
+</div>
+{% endblock %}
