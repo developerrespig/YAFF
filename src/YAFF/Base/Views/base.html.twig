@@ -2,8 +2,8 @@
 <html lang="{{ app.request.locale }}">
 <head>
     <meta charset="UTF-8"/>
-    <title>{% block title %}YAFF{% endblock %}</title>
-    <meta name="description" content="{% block description %}Welcome!{% endblock %}">
+    <title>{% block title %}{{ 'base.title'|trans }}{% endblock %}</title>
+    <meta name="description" content="{% block description %}{{ 'base.description'|trans }}{% endblock %}">
     <meta name="keywords" content="{% block keywords %}{% endblock %}">
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ app.request.basepath }}/resources/css/bootstrap.paper.min.3.3.0.css">
@@ -24,7 +24,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">YAFF</a>
+                <a class="navbar-brand" href="{{ path('yaff.overview') }}">{{ 'nav.title'|trans }}</a>
             </div>
             <div style="" aria-expanded="true" class="navbar-collapse navbar-inverse-collapse collapse in">
                 <ul class="nav navbar-nav">
@@ -34,18 +34,18 @@
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span
-                                        class="glyphicon glyphicon-wrench"></span> Settings <b
+                                        class="glyphicon glyphicon-wrench"></span> {{ 'nav.settings'|trans }} <b
                                         class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ path('users.overview') }}"><span
-                                                class="glyphicon glyphicon-user"></span> Users</a></li>
+                                                class="glyphicon glyphicon-user"></span> {{ 'nav.users'|trans }}</a></li>
                             </ul>
                         </li>
                     {% endif %}
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Willkommen {{ app.security.getToken().getUser().getUsername()}}  <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ 'nav.welcome'|trans({ '%user%': app.security.getToken().getUser().getUsername() }) }}  <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ path('logout') }}"><span class="glyphicon glyphicon-off"></span> Logout</a></li>
+                            <li><a href="{{ path('logout') }}"><span class="glyphicon glyphicon-off"></span> {{ 'nav.logout'|trans }}</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -62,7 +62,7 @@
                             <div class="alert alert-{{ type }} alert-dismissable">
                                 <button type="button" class="close" data-dismiss="alert"
                                         aria-hidden="true">&times;</button>
-                                {{ flashMessage }}
+                                {{ flashMessage|trans }}
                             </div>
                         </div>
                     {% endfor %}

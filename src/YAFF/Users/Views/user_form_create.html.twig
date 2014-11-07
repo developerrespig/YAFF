@@ -7,22 +7,22 @@
             </div>
             <div class="col-md-11">
                 <div class="form-group">
-                    <label for="inputUsername" class="col-sm-4 control-label">username *</label>
+                    <label for="inputUsername" class="col-sm-4 control-label">{{ 'user.username'|trans }} *</label>
 
                     <div class="col-sm-8">
                         <input type="text" class="form-control" name="username-new" required>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputPassword" class="col-sm-4 control-label">password *</label>
+                    <label for="inputPassword" class="col-sm-4 control-label">{{ 'user.password'|trans }} *</label>
 
                     <div class="col-sm-8">
                         <input type="password" class="form-control" name="password-new"
-                               placeholder="password" required>
+                               placeholder="{{ 'user.password'|trans }}" required>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputRole" class="col-sm-4 control-label">role</label>
+                    <label for="inputRole" class="col-sm-4 control-label">{{ 'user.role'|trans }}</label>
 
                     <div class="col-sm-8">
                         <select name="role-new" class="form-control">
@@ -36,8 +36,8 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>
-        <input type="submit" value="save" class="btn btn-primary"/>
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'button.cancel'|trans }}</button>
+        <input type="submit" value="{{ 'button.save'|trans }}" class="btn btn-primary"/>
         <input name="_csrf_token" value="{{ token }}" type="hidden">
     </div>
 </form>

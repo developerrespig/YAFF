@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="de" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>user.title</source>
+                <target>YAFF - Nutzerverwaltung</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>user.description</source>
+                <target>YAFF - Nutzerverwaltung</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>user.modal.add</source>
+                <target>Nutzer hinzufügen</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>user.modal.edit</source>
+                <target>Nutzer bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>user.flash.create.success</source>
+                <target>Nutzer wurde erfolgreich hinzugefügt.</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>user.flash.edit.success</source>
+                <target>Nutzer wurde erfolgreich bearbeitet.</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>user.flash.delete.success</source>
+                <target>Nutzer wurde erfolgreich gelöscht.</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>user.username</source>
+                <target>Anmeldename</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>user.action</source>
+                <target>Aktion</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>user.password</source>
+                <target>Passwort</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>user.role</source>
+                <target>Rolle</target>
+            </trans-unit>
+            <trans-unit id="12">
+                <source>user.flash.username.na</source>
+                <target>Der gewählte Anmeldename ist bereits vergeben!</target>
+            </trans-unit>
+            <trans-unit id="13">
+                <source>user.delete.ask</source>
+                <target>Diesen Nutzer wirklich löschen?</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
