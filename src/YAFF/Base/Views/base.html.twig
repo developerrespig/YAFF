@@ -2,14 +2,75 @@
 <html lang="{{ app.request.locale }}">
 <head>
     <meta charset="UTF-8"/>
-    <title>{% block title %}YAFF{% endblock %}</title>
-    <meta name="description" content="{% block description %}Welcome!{% endblock %}">
+    <title>{% block title %}{{ 'base.title'|trans }}{% endblock %}</title>
+    <meta name="description" content="{% block description %}{{ 'base.description'|trans }}{% endblock %}">
     <meta name="keywords" content="{% block keywords %}{% endblock %}">
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ app.request.basepath }}/resources/css/bootstrap.paper.min.3.3.0.css">
+    {% endblock %}
+    {% block javascripts %}
+        <script type="text/javascript" src="{{ app.request.basepath }}/resources/js/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="{{ app.request.basepath }}/resources/js/bootstrap.min.3.3.0.js"></script>
+    {% endblock %}
     <!--<link rel="icon" type="image/x-icon" href="" />-->
 </head>
 <body>
 {% block body %}
+    {% block menu %}
+        <div class="navbar navbar-inverse">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-inverse-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ path('yaff.overview') }}">{{ 'nav.title'|trans }}</a>
+            </div>
+            <div style="" aria-expanded="true" class="navbar-collapse navbar-inverse-collapse collapse in">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Active</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span
+                                        class="glyphicon glyphicon-wrench"></span> {{ 'nav.settings'|trans }} <b
+                                        class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ path('users.overview') }}"><span
+                                                class="glyphicon glyphicon-user"></span> {{ 'nav.users'|trans }}</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ 'nav.welcome'|trans({ '%user%': app.security.getToken().getUser().getUsername() }) }}  <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path('logout') }}"><span class="glyphicon glyphicon-off"></span> {{ 'nav.logout'|trans }}</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    {% endblock %}
 
+    {% block flashMessage %}
+        <div class="container-fluid">
+            <div class="row" id="flash-message-container">
+                {% for type, flashMessages in app.session.flashbag.all() %}
+                    {% for flashMessage in flashMessages %}
+                        <div class="col-md-10 col-md-offset-1">
+                            <div class="alert alert-{{ type }} alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert"
+                                        aria-hidden="true">&times;</button>
+                                {{ flashMessage|trans }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endblock %}
+    
     {% block content %}{% endblock %}
 
 {% endblock %}

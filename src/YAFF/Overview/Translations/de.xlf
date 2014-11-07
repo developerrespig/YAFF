@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="de" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>overview.title</source>
+                <target>YAFF - Übersicht</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>overview.description</source>
+                <target>YAFF - Übersicht</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
