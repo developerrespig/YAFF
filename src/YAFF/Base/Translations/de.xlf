@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="de" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>base.title</source>
+                <target>YAFF - Yet Another FHEM Frontend</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>base.description</source>
+                <target>Implementation of a user friendly FHEM Frontend which can be run on a Webserver</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>nav.title</source>
+                <target>YAFF</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>nav.settings</source>
+                <target>Einstellungen</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>nav.users</source>
+                <target>Benutzer</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>nav.logout</source>
+                <target>Abmelden</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>nav.welcome</source>
+                <target>Willkommen, %user%</target>
+            </trans-unit>
+            
+            <trans-unit id="8">
+                <source>button.cancel</source>
+                <target>Abbrechen</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>button.delete</source>
+                <target>Löschen</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>button.add</source>
+                <target>Hinzufügen</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>button.accept</source>
+                <target>Übernehmen</target>
+            </trans-unit>
+            <trans-unit id="12">
+                <source>button.edit</source>
+                <target>Bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="13">
+                <source>button.save</source>
+                <target>Speichern</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

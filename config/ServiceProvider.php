@@ -4,6 +4,10 @@
     $app->register(new Silex\Provider\SecurityServiceProvider());
     $app->register(new Silex\Provider\RememberMeServiceProvider());
     $app->register(new Silex\Provider\SessionServiceProvider());
+    $app->register(new Silex\Provider\TranslationServiceProvider(), array(
+        'locale_fallbacks' => array('de'),
+        'locale' => 'de',
+    ));
 
     // Twig Service Provider
     $app->register(new Silex\Provider\TwigServiceProvider(), array(
