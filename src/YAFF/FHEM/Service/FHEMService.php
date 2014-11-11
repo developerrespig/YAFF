@@ -3,6 +3,7 @@
 namespace YAFF\FHEM\Service;
 
 use Silex\Application;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Description of FHEMService
@@ -38,7 +39,11 @@ class FHEMService
         $response = curl_exec($curl);
         curl_close($curl);
 
-        return $response;
+        return new Response(
+            $response,
+            200,
+            ['Content-Type' => 'application/json']
+        );
     }
 }
 ?>
