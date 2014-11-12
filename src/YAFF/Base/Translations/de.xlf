@@ -24,7 +24,7 @@
             </trans-unit>
             <trans-unit id="6">
                 <source>nav.fhemconfig</source>
-                <target>FEHM Einstellungen</target>
+                <target>FHEM Einstellungen</target>
             </trans-unit>
             <trans-unit id="7">
                 <source>nav.logout</source>
