@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="de" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>fhemconfig.title</source>
+                <target>YAFF - FHEM Einstellungen</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>fhemconfig.description</source>
+                <target>YAFF - FHEM Einstellungen</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>fhemconfig.modal.edit</source>
+                <target>Einstellungen bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>fhemconfig.flash.edit.success</source>
+                <target>Einstellungen wurde erfolgreich bearbeitet.</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>fhemconfig.host</source>
+                <target>Host</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>fhemconfig.port</source>
+                <target>Port</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>fhemconfig.action</source>
+                <target>Aktion</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>fhemconfig.password</source>
+                <target>Passwort</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>fhemconfig.role</source>
+                <target>Rolle</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>fhemconfig.flash.invalid.port</source>
+                <target>Die gewählte Portnummer ist nicht gültig!</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>fhemconfig.table.header</source>
+                <target>FHEM spezifische Einstellungen</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -1,0 +1,99 @@
+{% extends 'Base/Views/base.html.twig' %}
+
+{% block title %}
+    {{ 'fhemconfig.title'|trans }}
+{% endblock %}
+
+{% block description %}
+    {{ 'fhemconfig.description'|trans }}
+{% endblock %}
+
+{% block content %}
+    <div class="modal fade" id="newModal">
+        <div class="modal-dialog">
+            <div class="modal-content" id="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">{{ 'fhemconfig.modal.edit'|trans }}</h4>
+                </div>
+                <div id="modal-content-ajax"></div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <h4>{{ 'fhemconfig.table.header'|trans }}</h3>
+                <table class="table table-responsive table-bordered table-hover">
+                    <tr>
+                        <th>{{ 'fhemconfig.host'|trans }}</th>
+                        <th>{{ 'fhemconfig.port'|trans }}</th>
+                        <th>{{ 'fhemconfig.action'|trans }}</th>
+                    </tr>
+                    <tr>
+                        <td>{{ config.host }}</td>
+                        <td>{{ config.port }}</td>
+                        <td>
+                            <a href="#" title="{{ 'button.edit'|trans }}"><span onclick="editConfig({{ config.id }})"
+                                        data-toggle="modal" data-target="#newModal"
+                                        class="glyphicon glyphicon-pencil"></span></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $.ajaxSetup({
+            cache: false
+        });
+        
+        // show modal to edit settings
+        function editConfig(id) {
+             var url = "{{ path('fhemconfig.edit.config', {'id': 'placeholder'}) }}";
+             url = url.replace("placeholder", id);
+            var content = '<div class="modal-body">' +
+                    '     <img src="{{ app.request.basepath }}/resources/images/ajax-loader.gif" />' +
+                    '</div>';
+            $('#newModal .modal-title').text("{{ 'fhemconfig.modal.edit'|trans }}");
+            $("#modal-content-ajax").html(content);
+            $("#modal-content-ajax").load(url, function (response, status, xhr) {
+            });
+
+            return false;
+        }
+        
+        // update the changes
+        function saveConfig(id) {
+            var form = "#config-form-" + id;
+            var url = "{{ path('fhemconfig.update.config', {'id': 'placeholder'}) }}";
+            url = url.replace("placeholder", id);
+
+            $.ajax({
+                url: url,
+                type: "post",
+                data: $(form).serialize(),
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                },
+                success: function (data) {
+                    if (data.length > 0) {
+                        $("#flash-message-overlay").empty();
+                        $("#flash-message-overlay").append(data);
+                    } else {
+                        location.reload();
+                    }
+                }
+            });
+
+            return false;
+        }
+    </script>
+{% endblock %}
