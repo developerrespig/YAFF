@@ -16,3 +16,8 @@ $app['security.firewalls'] = array(
         ),
     )
 );
+            
+$app['security.access_rules'] = array(
+    array('^/users', 'ROLE_ADMIN'),
+    array('^/fhemconfig', 'ROLE_ADMIN')
+);
