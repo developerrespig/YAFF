@@ -1,0 +1,31 @@
+<form id="config-form-{{ config.id }}" class="form-horizontal" role="form" onsubmit="return saveConfig({{ config.id }})">
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row" id="flash-message-overlay">
+                <div class="row">
+                </div>
+            </div>
+            <div class="col-md-11">
+                <div class="form-group">
+                    <label for="inputHost" class="col-sm-4 control-label">{{ 'fhemconfig.host'|trans }} *</label>
+
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="host-{{ config.id }}" value="{{ config.host }}" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPort" class="col-sm-4 control-label">{{ 'fhemconfig.port'|trans }} *</label>
+
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="port-{{ config.id }}" value="{{ config.port }}" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'button.cancel'|trans }}</button>
+        <input type="submit" value="{{ 'button.save'|trans }}" class="btn btn-primary"/>
+        <input name="_csrf_token" value="{{ token }}" type="hidden">
+    </div>
+</form>

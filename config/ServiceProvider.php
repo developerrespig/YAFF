@@ -21,3 +21,6 @@
     $app['UserService'] = $app->share(function ($app) {
         return new YAFF\Users\Service\UserService($app);
     });
+    $app['FHEMConfigurationService'] = $app->share(function ($app) {
+        return new YAFF\FHEMConfiguration\Service\FHEMConfigurationService($app);
+    });
