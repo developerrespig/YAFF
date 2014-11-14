@@ -61,5 +61,7 @@
     });
 
     $app->get('/fhem/get/values/{device}', "yaff.fhem.service:getValuesAction")
-    ->bind('yaff.fhem.getValues');
+        ->bind('yaff.fhem.getValues');
+    $app->get('/fhem/get/value/{device}', "yaff.fhem.service:getValueAction")
+        ->bind('yaff.fhem.getValue');
 ?>
