@@ -19,8 +19,8 @@
 
         public function getValuesAction($device)
         {
-            $startTimestamp = date('Y-m-d_h:i:s', strtotime("-24 hours"));
-            $endTimestamp = date('Y-m-d_h:i:s', time());
+            $startTimestamp = date('Y-m-d_H:i:s', strtotime("-24 hours"));
+            $endTimestamp = date('Y-m-d_H:i:s', time());
             $command = "get%20log_datenbank%20-%20webchart%20" . $startTimestamp . "%20" . $endTimestamp . "%20" . $device . "%20timerange%20TIMESTAMP%20temp_c";
             $url = $this->service->getUrl($command);
             if($url) {
