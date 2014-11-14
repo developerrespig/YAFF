@@ -13,16 +13,147 @@
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div class="row">
-                    <div class="col-md-12">Hello World - <a href="{{ path('yaff.fhem.getValues', {device: 'WetterDresden'}) }}">TEST</a></div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4"><div id="placeholder1" style="height: 300px"><img src="{{ app.request.basepath }}/resources/images/ajax-loader.gif" /></div></div>
-                    <div class="col-md-4"><div id="placeholder2" style="height: 300px"></div></div>
-                    <div class="col-md-4"><div id="placeholder3" style="height: 300px"></div></div>
+                    <div class="col-md-4">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Wetter - Temperatur: <span id="actualTemperature"><img src="{{ app.request.basepath }}/resources/images/ajax-loader.gif" /></span></div>
+                            <div class="panel-body">
+                                <div id="placeholder1" style="height: 200px"><img src="{{ app.request.basepath }}/resources/images/ajax-loader.gif" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Demo Graph 1 - Wert: 3.15 V</div>
+                            <div class="panel-body">
+                                <div id="placeholder2" style="height: 200px"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Demo Graph 2 - Wert: 1234 KW/h</div>
+                            <div class="panel-body">
+                                <div id="placeholder3" style="height: 200px"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-
-
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Raum 1 - Temperatur: 22° C</div>
+                            <div class="panel-body">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div align="center">
+                                                Temperatur setzen
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div align="center">
+                                                <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="" data-slider-max="40" data-slider-step="0.5" data-slider-value="22"/>
+                                            </div>
+                                            <hr>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-8">Licht 1</div>
+                                        <div class="col-xs-4" align="center">
+                                            <input type="checkbox" name="switch1" checked>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-8">Licht 2</div>
+                                        <div class="col-xs-4" align="center">
+                                            <input type="checkbox" name="switch2" checked>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-8">Licht 3</div>
+                                        <div class="col-xs-4" align="center">
+                                            <input type="checkbox" name="switch2" checked>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Raum 2 - Temperatur: 25° C</div>
+                            <div class="panel-body">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div align="center">
+                                                    Temperatur setzen
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div align="center">
+                                                    <input id="ex2" data-slider-id='ex1Slider' type="text" data-slider-min="" data-slider-max="40" data-slider-step="0.5" data-slider-value="22"/>
+                                                </div>
+                                                <hr>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-8">Licht 1</div>
+                                        <div class="col-xs-4" align="center">
+                                            <input type="checkbox" name="switch1" checked>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Raum 3 - Temperatur: 16° C</div>
+                            <div class="panel-body">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div align="center">
+                                                Temperatur setzen
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div align="center">
+                                                <input id="ex3" data-slider-id='ex1Slider' type="text" data-slider-min="" data-slider-max="40" data-slider-step="0.5" data-slider-value="22"/>
+                                            </div>
+                                            <hr>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-8">Licht 1</div>
+                                        <div class="col-xs-4" align="center">
+                                            <input type="checkbox" name="switch1" checked>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-8">Licht 2</div>
+                                        <div class="col-xs-4" align="center">
+                                            <input type="checkbox" name="switch2" checked>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -33,7 +164,13 @@
     {{ parent() }}
     <script>
     $(document).ready(function() {
-        console.log("Ready");
+        $.fn.bootstrapSwitch.defaults.size = 'mini';
+        $("[name='switch1']").bootstrapSwitch();
+        $("[name='switch2']").bootstrapSwitch();
+        $("[name='switch3']").bootstrapSwitch();
+        $('#ex1').slider();
+        $('#ex2').slider();
+        $('#ex3').slider();
 
         $.ajax({
             url: "{{ path('yaff.fhem.getValues', {device: 'WetterDresden'}) }}"
