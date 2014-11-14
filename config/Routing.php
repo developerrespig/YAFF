@@ -37,7 +37,22 @@
         ->bind('users.delete.user');
     $app->post('/users/{id}/delete', "user.management:deleteUserAction")
         ->bind('users.dodelete.user');
-
+    
+    /**
+     * FHEM Configuration
+     */
+    $app['fhemconfig.management'] = $app->share(function () use ($app) {
+        return new YAFF\FHEMConfiguration\Controller\FHEMConfigurationServiceController($app);
+    });
+    
+    $app->get('/fhemconfig/', "fhemconfig.management:indexAction")
+        ->bind('fhemconfig.overview');
+    $app->get('/fhemconfig/{id}/edit', "fhemconfig.management:editConfigAction")
+        ->value('id', '0')
+        ->bind('fhemconfig.edit.config');
+    $app->post('/fhemconfig/{id}/update', "fhemconfig.management:updateConfigAction")
+        ->bind('fhemconfig.update.config');
+ 
     /**
      * FHEM Service
      */

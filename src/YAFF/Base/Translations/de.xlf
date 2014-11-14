@@ -23,37 +23,46 @@
                 <target>Benutzer</target>
             </trans-unit>
             <trans-unit id="6">
+                <source>nav.fhemconfig</source>
+                <target>FHEM Einstellungen</target>
+            </trans-unit>
+            <trans-unit id="7">
                 <source>nav.logout</source>
                 <target>Abmelden</target>
             </trans-unit>
-            <trans-unit id="7">
+            <trans-unit id="8">
                 <source>nav.welcome</source>
                 <target>Willkommen, %user%</target>
             </trans-unit>
             
-            <trans-unit id="8">
+            <trans-unit id="9">
                 <source>button.cancel</source>
                 <target>Abbrechen</target>
             </trans-unit>
-            <trans-unit id="9">
+            <trans-unit id="10">
                 <source>button.delete</source>
                 <target>Löschen</target>
             </trans-unit>
-            <trans-unit id="10">
+            <trans-unit id="11">
                 <source>button.add</source>
                 <target>Hinzufügen</target>
             </trans-unit>
-            <trans-unit id="11">
+            <trans-unit id="12">
                 <source>button.accept</source>
                 <target>Übernehmen</target>
             </trans-unit>
-            <trans-unit id="12">
+            <trans-unit id="13">
                 <source>button.edit</source>
                 <target>Bearbeiten</target>
             </trans-unit>
-            <trans-unit id="13">
+            <trans-unit id="14">
                 <source>button.save</source>
                 <target>Speichern</target>
+            </trans-unit>
+            
+            <trans-unit id="15">
+                <source>flash.mandatory</source>
+                <target>Bitte alle Pflichtfelder ausfüllen.</target>
             </trans-unit>
         </body>
     </file>
