@@ -225,7 +225,7 @@
                 var maxValue;
                 for(i = 0; i < values.data.length; i++) {
                     var tempValue = parseInt(values.data[i]["VALUE"]);
-                    chartData.push([new Date(values.data[i].TIMESTAMP.replace(" ", "T")).getTime(), tempValue]);
+                    chartData.push([new Date(values.data[i].TIMESTAMP.replace(" ", "T") + "+01:00").getTime(), tempValue]);
 
                     if(i == 0) {
                         minValue = tempValue;
