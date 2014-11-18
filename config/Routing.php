@@ -60,8 +60,8 @@
         return new YAFF\FHEM\Controller\FHEMServiceController($app);
     });
 
-    $app->get('/fhem/get/values/{device}', "yaff.fhem.service:getValuesAction")
+    $app->get('/fhem/get/values/{device}/{type}', "yaff.fhem.service:getValuesAction")
         ->bind('yaff.fhem.getValues');
-    $app->get('/fhem/get/value/{device}', "yaff.fhem.service:getValueAction")
-        ->bind('yaff.fhem.getValue');
+    $app->get('/fhem/get/device/{device}', "yaff.fhem.service:getDeviceAction")
+        ->bind('yaff.fhem.getDevice');
 ?>

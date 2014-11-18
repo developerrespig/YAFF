@@ -17,11 +17,11 @@
             $this->service = $app['FHEMService'];
         }
 
-        public function getValuesAction($device)
+        public function getValuesAction($device, $type)
         {
             $startTimestamp = date('Y-m-d_H:i:s', strtotime("-24 hours"));
             $endTimestamp = date('Y-m-d_H:i:s', time());
-            $command = "get%20log_datenbank%20-%20webchart%20" . $startTimestamp . "%20" . $endTimestamp . "%20" . $device . "%20timerange%20TIMESTAMP%20temp_c";
+            $command = "get%20log_datenbank%20-%20webchart%20" . $startTimestamp . "%20" . $endTimestamp . "%20" . $device . "%20timerange%20TIMESTAMP%20" . $type;
             $url = $this->service->getUrl($command);
             if($url) {
                 $response = $this->service->createRequest($url);
@@ -34,7 +34,7 @@
             return $response;
         }
 
-        public function getValueAction($device) {
+        public function getDeviceAction($device) {
             $command = "jsonlist2%20" . $device;
             $url = $this->service->getUrl($command);
             if($url) {
