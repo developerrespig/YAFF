@@ -1,10 +1,10 @@
 <?php
-	namespace YAFF\Overview\Controller;
+	namespace YAFF\Dashboard\Controller;
 	
 	use Silex\Application;
 	use Symfony\Component\HttpFoundation\Request;
 	
-	class OverviewServiceController
+	class DashboardServiceController
 	{
 		private $app = null;
 		
@@ -15,7 +15,7 @@
 		
 		public function indexAction()
 		{
-			return $this->app['twig']->render('Overview/Views/index.html.twig');
+			return $this->app['twig']->render('Dashboard/Views/index.html.twig');
 		}
 	}	
 ?>

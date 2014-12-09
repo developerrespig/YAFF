@@ -1,10 +1,10 @@
 <?php
-    $app['yaff.overview'] = $app->share(function () use ($app) {
-            return new YAFF\Overview\Controller\OverviewServiceController($app);
+    $app['yaff.dashboard'] = $app->share(function () use ($app) {
+            return new YAFF\Dashboard\Controller\DashboardServiceController($app);
     });
 	
-    $app->get('/', "yaff.overview:indexAction")
-        ->bind('yaff.overview');
+    $app->get('/', "yaff.dashboard:indexAction")
+        ->bind('yaff.dashboard');
     
     /**
      * Login
