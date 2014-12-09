@@ -39,6 +39,16 @@
         ->bind('users.dodelete.user');
     
     /**
+     * General Configuration
+     */
+    $app['generalconfig.management'] = $app->share(function () use ($app) {
+    	return new YAFF\GeneralConfiguration\Controller\GeneralConfigurationController($app);
+    });
+    
+    $app->get('/generalconfig/', "generalconfig.management:indexAction")
+    	->bind('generalconfig.overview');
+    
+    /**
      * FHEM Configuration
      */
     $app['fhemconfig.management'] = $app->share(function () use ($app) {
