@@ -36,6 +36,16 @@ class GeneralConfiguration {
 	public function getId() {
 		return $this->id;
 	}
+
+    /**
+     * Sets the id
+     *
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
 	
 	/**
 	 * Gets the columns
@@ -60,7 +70,12 @@ class GeneralConfiguration {
 	{
 		return $this->rows;
 	}
-	
+
+    /**
+     * Sets the rows
+     *
+     * @param $value
+     */
 	public function setrows($value)
 	{
 		$this->rows = $value;

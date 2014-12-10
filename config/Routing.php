@@ -44,10 +44,11 @@
     $app['generalconfig.management'] = $app->share(function () use ($app) {
     	return new YAFF\GeneralConfiguration\Controller\GeneralConfigurationController($app);
     });
-    
+
     $app->get('/generalconfig/', "generalconfig.management:indexAction")
     	->bind('generalconfig.overview');
-    
+    $app->post('/generalconfig/save', "generalconfig.management:saveAction")
+        ->bind('generalconfig.save');
     /**
      * FHEM Configuration
      */
