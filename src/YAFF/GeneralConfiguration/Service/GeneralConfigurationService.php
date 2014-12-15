@@ -37,4 +37,18 @@ class GeneralConfigurationService
         $config->setRows($request->get("rows"));
         return $config;
     }
+    
+    /**
+     * Returns the actual configuration in the database or creates new default one
+     * @return GeneralConfiguration the configuration
+     */
+    public function getConfig() {
+        $config = $this->em->getRepository("\YAFF\Database\Entity\GeneralConfiguration")->find(1);
+        if ($config == null) {
+            $config = new GeneralConfiguration();        
+            $config->setColumns(3);
+            $config->setRows(2);
+        }
+        return $config;
+    }
 }

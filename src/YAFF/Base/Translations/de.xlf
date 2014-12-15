@@ -38,6 +38,10 @@
                 <source>nav.generalconfig</source>
                 <target>Allgemeine Einstellungen</target>
             </trans-unit>
+            <trans-unit id="17">
+                <source>nav.dashboard</source>
+                <target>Dashboard</target>
+            </trans-unit>
             
             <trans-unit id="10">
                 <source>button.cancel</source>

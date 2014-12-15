@@ -10,6 +10,10 @@
                 <source>dashboard.description</source>
                 <target>YAFF - Übersicht</target>
             </trans-unit>
+            <trans-unit id="3">
+                <source>dashboard.modal.add</source>
+                <target>Widget hinzufügen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

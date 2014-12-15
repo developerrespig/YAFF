@@ -38,7 +38,7 @@
             </div>
             <div style="" aria-expanded="true" class="navbar-collapse navbar-inverse-collapse collapse in">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Active</a></li>
+                    <li><a href="{{ path('yaff.dashboard') }}">{{ 'nav.dashboard'|trans }}</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if is_granted('ROLE_ADMIN') %}

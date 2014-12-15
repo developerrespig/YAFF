@@ -36,7 +36,7 @@ class GeneralConfigurationController
         }
 
     	return $this->app['twig']->render('GeneralConfiguration/Views/index.html.twig', array(
-            "config" => $config,
+            'config' => $config,
             'token' => $csrf->getCSRFTokenForForm()
         ));
     }

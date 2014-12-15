@@ -21,6 +21,10 @@ class FHEMService
         $this->app = $app;
     }
 
+    /**
+     * Gets the FHEM configuration
+     * @return type
+     */
     private function getFHEMConfig() {
         $em = $this->app['orm.em'];
         $configs = $em->getRepository("\YAFF\Database\Entity\FHEMConfiguration")->findAll();
@@ -34,6 +38,11 @@ class FHEMService
         return $return;
     }
 
+    /**
+     * Creates the request URL for the given command
+     * @param type $command
+     * @return type
+     */
     public function getUrl($command) {
         $config = $this->getFHEMConfig();
         if($config) {
@@ -46,7 +55,7 @@ class FHEMService
     }
 
     /**
-     * Creates simple Request to the given url
+     * Creates simple Request to the given url and returns the response as json
      *
      * @param String $url
      * @param Array $parameters
@@ -80,6 +89,22 @@ class FHEMService
             $statusCode,
             ['Content-Type' => 'application/json']
         );
+    }
+    
+    public function getFHEMDevices() {
+        $url = $this->getUrl("jsonlist2");
+        $response = $this->createRequest($url);
+        
+        if($response->getStatusCode() == 200) {
+            $devices = array();
+            $content = $response->getContent();
+            $jsonArray = json_decode($content)->{'Results'};
+            for($i = 0; $i < count($jsonArray); $i++) {
+                array_push($devices, $jsonArray[$i]->{'Name'});
+            }
+        }
+        
+        return $devices;
     }
 }
 ?>
