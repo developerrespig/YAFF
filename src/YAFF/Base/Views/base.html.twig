@@ -22,10 +22,13 @@
             
             yaff.util = {
                 setContentModalLoading: function(id) {
-                    var content = '<div class="modal-body">' +
-                    '     <img src="{{ app.request.basepath }}/resources/images/ajax-loader.gif" />' +
-                    '</div>';
+                    var content = '<div class="modal-body">' + this.getLoadingAnimation() + '</div>';
                     $(id).html(content);
+                },
+                        
+                getLoadingAnimation: function() {
+                    var img = '<img src="{{ app.request.basepath }}/resources/images/ajax-loader.gif" />';
+                    return img;
                 }
             }
         </script>

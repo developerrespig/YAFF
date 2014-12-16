@@ -58,6 +58,8 @@
             yaff.util.setContentModalLoading(idModal);
             $(idModal).load('{{ path('yaff.dashboard.create.widget.graph') }}', function() {
                 $('#device').change(yaff.dashboard.createOptionsReadings);
+                $('#reading').change(yaff.dashboard.getCurrentReadingValue);
+                yaff.dashboard.createOptionsReadings();
             });
         }
     }

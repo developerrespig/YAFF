@@ -30,4 +30,7 @@
     $app['FHEMService'] = $app->share(function ($app) {
         return new YAFF\FHEM\Service\FHEMService($app);
     });
+    $app['DashboardService'] = $app->share(function ($app) {
+        return new YAFF\Dashboard\Service\DashboardService($app);
+    });
 

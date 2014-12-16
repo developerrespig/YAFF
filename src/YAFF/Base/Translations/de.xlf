@@ -42,6 +42,14 @@
                 <source>nav.dashboard</source>
                 <target>Dashboard</target>
             </trans-unit>
+            <trans-unit id="18">
+                <source>hours</source>
+                <target>Stunden</target>
+            </trans-unit>
+            <trans-unit id="19">
+                <source>days</source>
+                <target>Tage</target>
+            </trans-unit>
             
             <trans-unit id="10">
                 <source>button.cancel</source>

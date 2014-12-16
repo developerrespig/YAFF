@@ -10,6 +10,8 @@
         ->bind('yaff.dashboard');
     $app->get('/create/widget/graph', "yaff.dashboard:createWidgetGraphAction")
         ->bind('yaff.dashboard.create.widget.graph');
+    $app->post('/save/widget/graph', "yaff.dashboard:saveWidgetGraphAction")
+        ->bind('yaff.dashboard.save.widget.graph');
     
     /**
      * Login
