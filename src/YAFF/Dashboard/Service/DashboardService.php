@@ -28,7 +28,7 @@ class DashboardService
      * @return \YAFF\Database\Entity\Widget
      */
     public function getWidgetFromForm(Request $request, $id = 0) {
-        if ($id === '0') {
+        if ($id === 0) {
             $widget = new Widget();            
         } else {
             $widget = $this->em->getRepository("\YAFF\Database\Entity\Widget")->find($id);
@@ -37,7 +37,8 @@ class DashboardService
         $widget->setTitle($request->get('title'));
         $widget->setDevice($request->get('device'));
         $widget->setReading($request->get('reading'));
-        $widget->setIntervall($request->get('intervall'));
+        $widget->setInterval(intval($request->get('interval')));
+        $widget->setIdx(1);
         $widget->setType(1);
 
         return $widget;

@@ -12,6 +12,8 @@
         ->bind('yaff.dashboard.create.widget.graph');
     $app->post('/save/widget/graph', "yaff.dashboard:saveWidgetGraphAction")
         ->bind('yaff.dashboard.save.widget.graph');
+    $app->get('/delete/widget/{id}', "yaff.dashboard:deleteWidgetAction")
+        ->bind('yaff.dashboard.delete.widget');
     
     /**
      * Login

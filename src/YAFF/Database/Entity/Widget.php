@@ -39,12 +39,12 @@ class Widget {
        /** 
         * @Column(type="integer")
         */
-       private $intervall;
+       private $interval;
 	
 	/**
 	 * @Column(type="integer")
 	 */
-	private $index;
+	private $idx;
         
         function getId() {
             return $this->id;
@@ -62,12 +62,12 @@ class Widget {
             return $this->reading;
         }
 
-        function getIndex() {
-            return $this->index;
+        function getIdx() {
+            return $this->idx;
         }        
         
-        function getIntervall() {
-            return $this->intervall;
+        function getInterval() {
+            return $this->interval;
         }
         
         function getType() {
@@ -90,12 +90,12 @@ class Widget {
             $this->reading = $reading;
         }
 
-        function setIndex($index) {
-            $this->index = $index;
+        function setIdx($idx) {
+            $this->idx = $idx;
         }
 
-        function setIntervall($intervall) {
-            $this->intervall = $intervall;
+        function setInterval($interval) {
+            $this->interval = $interval;
         }
 }
 ?>

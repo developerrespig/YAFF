@@ -89,8 +89,8 @@
     
     yaff.dashboard.saveWidgetGraph = function() {
         var url = "{{ path('yaff.dashboard.save.widget.graph') }}";
-        $.post(url, $('create-widget-graph').serialize(), function(data) {
-            console.log(data);
+        $.post(url, $('#create-widget-graph').serialize(), function(data) {
+            location.reload();
         });
     }
     

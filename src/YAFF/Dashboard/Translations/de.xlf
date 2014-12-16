@@ -30,6 +30,26 @@
                 <source>dashboard.create.widget.graph.intervall</source>
                 <target>Zeitraum</target>
             </trans-unit>
+            <trans-unit id="8">
+                <source>dashboard.edit.mode.off</source>
+                <target>Bearbeitungsmodus: Aus</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>dashboard.edit.mode.on</source>
+                <target>Bearbeitungsmodus: An</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>dashboard.widget.delete.successful</source>
+                <target>Widget wurde erfolgreich gelöscht</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>dashboard.widget.delete.error.not.found</source>
+                <target>Löschen fehlgeschlagen. Widget existiert nicht!</target>
+            </trans-unit>
+            <trans-unit id="12">
+                <source>dashboard.widget.create.graph.successful</source>
+                <target>Widget wurde erfolgreich erstellt.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
