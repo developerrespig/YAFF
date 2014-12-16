@@ -28,7 +28,7 @@
             <div class="col-sm-10 col-sm-offset-1">
                 <div class="row" id="dashboard-menu-bar">
                     <div class="btn-group">
-                    <button type="button" class="btn btn-default" onclick="yaff.dashboard.chooseDevice()" data-toggle="modal" data-target="#newWidgetModal"><span class="glyphicon glyphicon-plus"></span> {{ 'dashboard.modal.add'|trans }}</button>
+                    <button type="button" class="btn btn-default" onclick="yaff.dashboard.createWidgetGraph()" data-toggle="modal" data-target="#newWidgetModal"><span class="glyphicon glyphicon-plus"></span> {{ 'dashboard.modal.add'|trans }}</button>
                     </div>
                     <hr>
                 </div>
@@ -53,8 +53,12 @@
     {{ parent() }}
     <script>
     yaff.dashboard = {
-        chooseDevice: function() {
-            $('#modal-content-ajax').html("Hello World");
+        createWidgetGraph: function() {
+            var idModal = '#modal-content-ajax';
+            yaff.util.setContentModalLoading(idModal);
+            $(idModal).load('{{ path('yaff.dashboard.create.widget.graph') }}', function() {
+                $('#device').change(yaff.dashboard.createOptionsReadings);
+            });
         }
     }
     </script>

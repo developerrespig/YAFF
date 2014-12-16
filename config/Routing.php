@@ -1,10 +1,15 @@
 <?php
+    /**
+     * Dashboard
+     */
     $app['yaff.dashboard'] = $app->share(function () use ($app) {
             return new YAFF\Dashboard\Controller\DashboardServiceController($app);
     });
 	
     $app->get('/', "yaff.dashboard:indexAction")
         ->bind('yaff.dashboard');
+    $app->get('/create/widget/graph', "yaff.dashboard:createWidgetGraphAction")
+        ->bind('yaff.dashboard.create.widget.graph');
     
     /**
      * Login

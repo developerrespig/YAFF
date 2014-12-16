@@ -19,6 +19,15 @@
         <script type="text/javascript" src="{{ app.request.basepath }}/resources/js/bootstrap-switch.min.js"></script>
         <script>
             var yaff = yaff || {};
+            
+            yaff.util = {
+                setContentModalLoading: function(id) {
+                    var content = '<div class="modal-body">' +
+                    '     <img src="{{ app.request.basepath }}/resources/images/ajax-loader.gif" />' +
+                    '</div>';
+                    $(id).html(content);
+                }
+            }
         </script>
     {% endblock %}
     <!--<link rel="icon" type="image/x-icon" href="" />-->

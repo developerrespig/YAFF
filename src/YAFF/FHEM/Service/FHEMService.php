@@ -91,19 +91,22 @@ class FHEMService
         );
     }
     
-    public function getFHEMDevices() {
+    public function getFHEMJsonList() {
         $url = $this->getUrl("jsonlist2");
-        $response = $this->createRequest($url);
-        
+        $response = $this->createRequest($url);        
         if($response->getStatusCode() == 200) {
-            $devices = array();
-            $content = $response->getContent();
-            $jsonArray = json_decode($content)->{'Results'};
-            for($i = 0; $i < count($jsonArray); $i++) {
-                array_push($devices, $jsonArray[$i]->{'Name'});
-            }
+            $jsonlist = $response->getContent();
+            $jsonArray = json_decode($jsonlist)->{'Results'};
         }
-        
+        return $jsonArray;
+    }
+    
+    public function getFHEMDevices() {
+        $devices = array();
+        $jsonArray = $this->getFHEMJsonList();
+        for($i = 0; $i < count($jsonArray); $i++) {
+            $devices[$jsonArray[$i]->{'Name'}] = $jsonArray[$i];
+        }
         return $devices;
     }
 }
