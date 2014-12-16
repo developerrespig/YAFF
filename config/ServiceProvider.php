@@ -11,7 +11,11 @@
 
     // Twig Service Provider
     $app->register(new Silex\Provider\TwigServiceProvider(), array(
-            'twig.path' => __DIR__ . '/../src/YAFF'
+            'twig.path' => __DIR__ . '/../src/YAFF',
+            'twig.options' => array(
+                'cache'       => __DIR__ . '/../cache/templates', // the place to cache to
+                'auto_reload' => true //reload template when changes are detected
+            )
     ));
     
     // own Service providers
