@@ -84,6 +84,7 @@
         public function deleteWidgetAction($id) {
             $em = $this->app['orm.em'];
             $response = new Response();
+            $response->setStatusCode(500);
             $widget = $em->getRepository("\YAFF\Database\Entity\Widget")->find($id);
             if($widget != null) {
                 $em->remove($widget);
@@ -94,6 +95,37 @@
                 $this->app['session']->getFlashBag()->add('warning', 'dashboard.widget.delete.error.not.found');
                 $response->setStatusCode(200);
             }
+            return $response;
+        }
+        
+        /**
+         * Moves the widget with the given $id in the given $direction
+         * @param type $id the widget id
+         * @param type $direction the direction 'left' or 'right'
+         * @return Response
+         */
+        public function moveWidgetAction($id, $direction) {
+            $serviceDashboard = $this->app['DashboardService'];
+            $response = new Response();
+            $ret = false;
+            
+            if($direction == 'right') {
+                echo 'moving right';
+                $ret = $serviceDashboard->moveWidgetRight($id);
+            }
+            
+            if($direction == 'left') {                
+                $ret = $serviceDashboard->moveWidgetLeft($id);
+            }
+            
+            if($ret) {
+                $this->app['session']->getFlashBag()->add('success', 'dashboard.widget.move.successful');
+                $response->setStatusCode(200);
+            } else {
+                $this->app['session']->getFlashBag()->add('danger', 'dashboard.widget.move.error');
+                $response->setStatusCode(500);
+            }
+            
             return $response;
         }
     }	

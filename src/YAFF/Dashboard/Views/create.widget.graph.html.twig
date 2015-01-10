@@ -90,7 +90,7 @@
     yaff.dashboard.saveWidgetGraph = function() {
         var url = "{{ path('yaff.dashboard.save.widget.graph') }}";
         $.post(url, $('#create-widget-graph').serialize(), function(data) {
-            location.reload();
+            yaff.util.log("Response from saving Graph request: " + data);
         });
     }
     

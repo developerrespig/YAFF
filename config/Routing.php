@@ -14,6 +14,8 @@
         ->bind('yaff.dashboard.save.widget.graph');
     $app->get('/delete/widget/{id}', "yaff.dashboard:deleteWidgetAction")
         ->bind('yaff.dashboard.delete.widget');
+    $app->get('/move/widget/{id}/{direction}', "yaff.dashboard:moveWidgetAction")
+        ->bind('yaff.dashboard.move.widget');
     
     /**
      * Login

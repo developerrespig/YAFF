@@ -50,6 +50,14 @@
                 <source>dashboard.widget.create.graph.successful</source>
                 <target>Widget wurde erfolgreich erstellt.</target>
             </trans-unit>
+            <trans-unit id="13">
+                <source>dashboard.widget.move.successful</source>
+                <target>Widget wurde erfolgreich verschoben.</target>
+            </trans-unit>
+            <trans-unit id="14">
+                <source>dashboard.widget.move.error</source>
+                <target>Beim verschieben des Widgets trat ein Fehler auf.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

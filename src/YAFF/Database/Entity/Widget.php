@@ -4,7 +4,7 @@ namespace YAFF\Database\Entity;
 
 /**
  * @Table(name="yaff_dashboard_widgets")
- * @Entity
+ * @Entity(repositoryClass="YAFF\Database\Repository\WidgetRepository")
  */
 class Widget {
 	/**
