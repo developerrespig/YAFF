@@ -29,7 +29,7 @@ class WidgetRepository extends EntityRepository
     public function findLeftWidget($idx) {
         $criteria = new Criteria();
         $criteria->where($criteria->expr()->lt('idx', $idx));
-        $criteria->orderBy(array('id' => 'DESC'));
+        $criteria->orderBy(array('idx' => 'DESC'));
         $criteria->setMaxResults(1);
         return $this->matching($criteria);
     }
@@ -42,7 +42,7 @@ class WidgetRepository extends EntityRepository
     public function findRightWidget($idx) {
         $criteria = new Criteria();
         $criteria->where($criteria->expr()->gt('idx', $idx));
-        $criteria->orderBy(array('id' => 'ASC'));
+        $criteria->orderBy(array('idx' => 'ASC'));
         $criteria->setMaxResults(1);
         return $this->matching($criteria);
     }
