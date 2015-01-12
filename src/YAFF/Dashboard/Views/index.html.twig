@@ -120,7 +120,7 @@
              * @param {array} values
              * @param {jQuery} widget
              */
-            drawWidgetGraph: function(values, widget) {            
+            drawWidgetGraph: function(values, widget, reading) {            
                 var chartData = [];
                 var minValue;
                 var maxValue;
@@ -169,7 +169,7 @@
                 }).appendTo("body");
                 widget.bind("plothover", function (event, pos, item) {
                     if(item != null) {
-                        $("#tooltip").html(new Date(item.datapoint[0]) + ": " + item.datapoint[1])
+                        $("#tooltip").html(new Date(item.datapoint[0]).toLocaleString() + " " + reading + ": " + item.datapoint[1])
                                 .css({top: item.pageY+5, left: item.pageX+5})
                                 .fadeIn(200);
                     } else {
@@ -196,7 +196,7 @@
                     // saves the current widget in the loop an passes it to the drawWidgetGraph method
                     (function(widget) {
                         $.get(url, function(values) {
-                            yaff.dashboard.drawWidgetGraph(values, widget);
+                            yaff.dashboard.drawWidgetGraph(values, widget, reading);
                         });
                     })(widget);
                 }
