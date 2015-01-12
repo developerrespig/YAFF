@@ -8,6 +8,8 @@
     use YAFF\GeneralConfiguration\Service\GeneralConfigurationService;
     use YAFF\GeneralConfiguration\Service\FHEMService;
     use YAFF\GeneralConfiguration\Service\DashboardService;
+    
+    use YAFF\Database\Entity\Widget;
 
     class DashboardServiceController
     {
@@ -44,13 +46,20 @@
          * Handles the form request for the creation of a new Graph Widget
          * @return Response the form for a new Graph Widget
          */
-        public function createWidgetGraphAction() {
+        public function showFormWidgetGraphAction($id = -1) {
             $csrf = $this->app['csrf_protection'];
             $fhemService = $this->app['FHEMService'];
             $devices = $fhemService->getFHEMDevices();
             
-            return $this->app['twig']->render('Dashboard/Views/create.widget.graph.html.twig', array(
+            $widget = null;
+            if($id > -1) {
+                $em = $this->app['orm.em'];
+                $widget = $em->getRepository("\YAFF\Database\Entity\Widget")->findById($id);                
+            }
+            
+            return $this->app['twig']->render('Dashboard/Views/form.widget.graph.html.twig', array(
                 'devices' => $devices,
+                'widget' => $widget[0],
                 'token' => $csrf->getCSRFTokenForForm()
             ));
         }
@@ -59,17 +68,22 @@
          * Saves the in the form provided information for a new graph widget
          * @param Request $request
          */
-        public function saveWidgetGraphAction(Request $request) {
+        public function saveWidgetGraphAction(Request $request, $id) {
             $csrf = $this->app['csrf_protection'];
             $response = new Response();
             $response->setStatusCode(500);
             if (($csrf->validateCSRFToken($request))) {
+                if($id == -1) {
+                    $message = 'dashboard.widget.create.graph.successful';
+                } else {
+                    $message = 'dashboard.widget.edit.graph.successful';
+                }                        
                 $serviceDashboard = $this->app['DashboardService'];
-                $widget = $serviceDashboard->getWidgetFromForm($request);
+                $widget = $serviceDashboard->getWidgetFromForm($request, $id);
                 $em = $this->app['orm.em'];
                 $em->persist($widget);
-                $em->flush();
-                $this->app['session']->getFlashBag()->add('success', 'dashboard.widget.create.graph.successful');
+                $em->flush();                
+                $this->app['session']->getFlashBag()->add('success', $message);
                 $response->setStatusCode(200);
             }
             

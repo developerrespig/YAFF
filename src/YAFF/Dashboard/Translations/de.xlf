@@ -51,8 +51,8 @@
                 <target>Widget wurde erfolgreich erstellt.</target>
             </trans-unit>
             <trans-unit id="13">
-                <source>dashboard.widget.move.successful</source>
-                <target>Widget wurde erfolgreich verschoben.</target>
+                <source>dashboard.widget.edit.graph.successful</source>
+                <target>Das Widget wurde erfolgreich editiert.</target>
             </trans-unit>
             <trans-unit id="14">
                 <source>dashboard.widget.move.error</source>

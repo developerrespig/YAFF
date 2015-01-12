@@ -42,8 +42,8 @@ class DashboardService
      * @param int $id
      * @return \YAFF\Database\Entity\Widget
      */
-    public function getWidgetFromForm(Request $request, $id = 0) {
-        if ($id === 0) {
+    public function getWidgetFromForm(Request $request, $id = -1) {
+        if ($id == -1) {
             $widget = new Widget();
             $widgets = $this->em->getRepository("\YAFF\Database\Entity\Widget")->findAll();
             $widgetsCount = sizeof($widgets);

@@ -1,4 +1,4 @@
-<form id="create-widget-graph" class="form-horizontal" role="form" onsubmit="return yaff.dashboard.saveWidgetGraph()">
+<form id="create-widget-graph" class="form-horizontal" role="form" onsubmit="return yaff.dashboard.saveWidgetGraph({% if widget is not null %} {{ widget.id }} {% else %} -1 {% endif %})">
     <div class="modal-body">
         <div class="container-fluid">
             <div class="row" id="flash-message-overlay">
@@ -10,7 +10,7 @@
                     <label for="inputTitle" class="col-sm-4 control-label">{{ 'dashboard.create.widget.graph.title'|trans }} *</label>
 
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" name="title" required>
+                        <input type="text" class="form-control" name="title" {% if widget is not null %} value="{{ widget.title }}" {% endif %} required>
                     </div>
                 </div>
                 <div class="form-group">
@@ -18,7 +18,7 @@
                     <div class="col-sm-8">
                         <select id="device" name="device">
                             {% for device in devices %}
-                                <option value="{{ attribute(device, 'Name') }}">{{ attribute(device, 'Name') }}</option>
+                                <option value="{{ attribute(device, 'Name') }}" {% if widget is not null and widget.device == attribute(device, 'Name') %} selected {% endif %}>{{ attribute(device, 'Name') }}</option>
                             {% endfor %}
                         </select>
                     </div>                        
@@ -36,11 +36,11 @@
                     <label for="inputReadings" class="col-sm-4 control-label">{{ 'dashboard.create.widget.graph.intervall'|trans }}</label>
                     <div class="col-sm-8">
                         <select name="interval">
-                            <option value="{{ 3600*12 }}">12 {{ 'hours'|trans }}</option>
-                            <option value="{{ 3600*24 }}">24 {{ 'hours'|trans }}</option>
-                            <option value="{{ 3600*24*7 }}">7 {{ 'days'|trans }}</option>
-                            <option value="{{ 3600*24*14 }}">14 {{ 'days'|trans }}</option>
-                            <option value="{{ 3600*24*30 }}">30 {{ 'days'|trans }}</option>
+                            <option value="{{ 3600*12 }}" {% if widget is not null and widget.interval == 3600*12 %} selected {% endif %}>12 {{ 'hours'|trans }}</option>
+                            <option value="{{ 3600*24 }}" {% if widget is not null and widget.interval == 3600*24 %} selected {% endif %}>24 {{ 'hours'|trans }}</option>
+                            <option value="{{ 3600*24*7 }}" {% if widget is not null and widget.interval == 3600*24*7 %} selected {% endif %}>7 {{ 'days'|trans }}</option>
+                            <option value="{{ 3600*24*14 }}" {% if widget is not null and widget.interval == 3600*24*14 %} selected {% endif %}>14 {{ 'days'|trans }}</option>
+                            <option value="{{ 3600*24*30 }}" {% if widget is not null and widget.interval == 3600*24*30 %} selected {% endif %}>30 {{ 'days'|trans }}</option>
                         </select>
                     </div>
                 </div>
@@ -68,8 +68,17 @@
     yaff.dashboard.createOptionsReadings = function() {
         var devices = {{ devices|json_encode()|raw }};
         var select = $('<select name="reading">');
+        var readingValue = {% if widget is not null %} '{{ widget.reading }}' {% else %} null {% endif %};
         for(reading in devices[yaff.dashboard.getDeviceFromForm()].Readings) {
-            select.append($('<option></option>').val(reading).html(reading));
+            var option;
+            if(readingValue != null) {
+                if(reading == readingValue) {
+                    option = $('<option selected></option>');
+                } else {
+                    option = $('<option></option>');
+                }
+            }
+            select.append(option.val(reading).html(reading));
         }
         $('#reading').html(select.html());
         yaff.dashboard.getCurrentReadingValue();
@@ -87,8 +96,9 @@
         });
     }
     
-    yaff.dashboard.saveWidgetGraph = function() {
-        var url = "{{ path('yaff.dashboard.save.widget.graph') }}";
+    yaff.dashboard.saveWidgetGraph = function(id) {
+        var url = "{{ path('yaff.dashboard.save.widget.graph', {id: 'idPlaceholder'}) }}";
+        url = url.replace('idPlaceholder', id);
         $.post(url, $('#create-widget-graph').serialize(), function(data) {
             yaff.util.log("Response from saving Graph request: " + data);
         });

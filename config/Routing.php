@@ -8,9 +8,11 @@
 	
     $app->get('/', "yaff.dashboard:indexAction")
         ->bind('yaff.dashboard');
-    $app->get('/create/widget/graph', "yaff.dashboard:createWidgetGraphAction")
+    $app->get('/create/widget/graph', "yaff.dashboard:showFormWidgetGraphAction")
         ->bind('yaff.dashboard.create.widget.graph');
-    $app->post('/save/widget/graph', "yaff.dashboard:saveWidgetGraphAction")
+    $app->get('/edit/widget/graph/{id}', "yaff.dashboard:showFormWidgetGraphAction")
+        ->bind('yaff.dashboard.edit.widget.graph');    
+    $app->post('/save/widget/graph/{id}', "yaff.dashboard:saveWidgetGraphAction")
         ->bind('yaff.dashboard.save.widget.graph');
     $app->get('/delete/widget/{id}', "yaff.dashboard:deleteWidgetAction")
         ->bind('yaff.dashboard.delete.widget');
