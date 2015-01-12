@@ -171,9 +171,10 @@
                     var device = widget.data('yaffWidgetDevice');
                     var reading = widget.data('yaffWidgetReading');
                     var interval = widget.data('yaffWidgetInterval');
-                    var url = "{{ path('yaff.fhem.getValues', {device: 'devicePlaceholder', type: 'readingPlaceholder'}) }}";
+                    var url = "{{ path('yaff.fhem.getValues', {device: 'devicePlaceholder', type: 'readingPlaceholder', seconds: 'secondsPlaceholder'}) }}";
                     url = url.replace('devicePlaceholder', device);
                     url = url.replace('readingPlaceholder', reading);
+                    url = url.replace('secondsPlaceholder', interval);
 
                     // saves the current widget in the loop an passes it to the drawWidgetGraph method
                     (function(widget) {

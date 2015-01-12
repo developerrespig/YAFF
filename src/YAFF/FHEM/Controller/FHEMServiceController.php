@@ -17,9 +17,9 @@
             $this->service = $app['FHEMService'];
         }
 
-        public function getValuesAction($device, $type)
+        public function getValuesAction($device, $type, $seconds)
         {
-            $startTimestamp = date('Y-m-d_H:i:s', strtotime("-24 hours"));
+            $startTimestamp = date('Y-m-d_H:i:s', strtotime("-" . $seconds . " seconds"));
             $endTimestamp = date('Y-m-d_H:i:s', time());
             $command = "get%20log_datenbank%20-%20webchart%20" . $startTimestamp . "%20" . $endTimestamp . "%20" . $device . "%20timerange%20TIMESTAMP%20" . $type;
             $url = $this->service->getUrl($command);
