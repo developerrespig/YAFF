@@ -24,11 +24,11 @@
     </div><!-- /.modal -->
     
     <div class="container-fluid">
-        <div class="row">
+        <div class="row" id="yaff-dashboard-content" data-max-widget-count="{{ config.rows * config.columns }}">
             <div class="col-sm-10 col-sm-offset-1">
                 <div class="row" id="dashboard-menu-bar" style="display: none;">
                     <div class="btn-group">
-                    <button type="button" class="btn btn-default" onclick="yaff.dashboard.modalCreateWidgetGraph()" data-toggle="modal" data-target="#newWidgetModal"><span class="glyphicon glyphicon-plus"></span> {{ 'dashboard.modal.add'|trans }}</button>
+                    <button type="button" id="yaff-dashboard-create-widget" class="btn btn-default" onclick="yaff.dashboard.modalCreateWidgetGraph()" data-toggle="modal" data-target="#newWidgetModal"><span class="glyphicon glyphicon-plus"></span> {{ 'dashboard.modal.add'|trans }}</button>
                     </div>
                     <hr>
                 </div>
@@ -38,12 +38,12 @@
                         <div class="row">
                             {% for j in 1..config.columns %}                                
                                 {% if widgets[counter] is defined %}
-                                    <div class="col-sm-{{ 12 / config.columns }}">
+                                    <div class="col-sm-{{ 12 / config.columns }} yaff-widget" data-yaff-widget-index="{{ counter }}">
                                         <div class="panel panel-primary">                                
                                             <div class="panel-heading">
                                                 {{ widgets[counter].title }}
                                                 <div class="widget-menu-bar btn-group" style="float: right; display:none;">
-                                                    <button type="button" class="btn btn-default btn-xs" aria-label="Left Align" onclick="return yaff.dashboard.moveWidget({{ widgets[counter].id }}, 'left')" {% if counter == 0 %} style="display: none;" {% endif %}>
+                                                    <button type="button" class="btn btn-default btn-xs yaff-widget-move-left" aria-label="Left Align" onclick="return yaff.dashboard.moveWidget({{ widgets[counter].id }}, 'left', this)" {% if counter == 0 %} style="display: none;" {% endif %}>
                                                         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                                                     </button>
                                                     <button type="button" class="btn btn-default btn-xs" aria-label="Center Align" onclick="return yaff.dashboard.modalEditWidgetGraph({{ widgets[counter].id }})" data-toggle="modal" data-target="#newWidgetModal">
@@ -52,7 +52,7 @@
                                                     <button type="button" class="btn btn-default btn-xs" aria-label="Center Align" onclick="return yaff.dashboard.deleteWidget({{ widgets[counter].id }})">
                                                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                                     </button>
-                                                    <button type="button" class="btn btn-default btn-xs" aria-label="Right Align" onclick="return yaff.dashboard.moveWidget({{ widgets[counter].id }}, 'right')" {% if widgets[counter + 1] is not defined %} style="display: none;" {% endif %}>
+                                                    <button type="button" class="btn btn-default btn-xs yaff-widget-move-right" aria-label="Right Align" onclick="return yaff.dashboard.moveWidget({{ widgets[counter].id }}, 'right', this)" {% if widgets[counter + 1] is not defined %} style="display: none;" {% endif %}>
                                                         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                                                     </button>
                                                 </div>
@@ -215,7 +215,13 @@
                     }
                     buttonToggleEdit.html('{{ 'dashboard.edit.mode.off'|trans }}');
                     menubar.hide();
-                } else {
+                } else {                    
+                    if($("#yaff-dashboard-content").data("max-widget-count") == $(".yaff-widget").length) {
+                        if(!$("#yaff-dashboard-create-widget").prop('disabled')) {
+                            $("#yaff-dashboard-create-widget").prop( "disabled", true );
+                            $("#yaff-dashboard-create-widget").html($("#yaff-dashboard-create-widget").html() + " ({{ 'dashboard.max.widgets'|trans }})");
+                        }
+                    }
                     for(var i = 0; i < widgetMenuBars.length; i++) {
                         $(widgetMenuBars[i]).show();
                     }
@@ -241,12 +247,30 @@
              * @param id the widget id
              * @param direction the direction 'left' or 'right'
              */
-            moveWidget: function(id, direction) {
+            moveWidget: function(id, direction, obj) {
                 var url = "{{ path('yaff.dashboard.move.widget', {id: 'placeholderId', direction: 'placeholderDirection'}) }}";
+                var index = parseInt($(obj.parentNode.parentNode.parentNode.parentNode).attr("data-yaff-widget-index"));
                 url = url.replace('placeholderId', id);
                 url = url.replace('placeholderDirection', direction);
                 $.get(url, function() {
-                    location.reload();
+                    var widget = $('div[data-yaff-widget-index="' + index + '"]');
+                    if(direction == 'left') {
+                        var widgetBefore = $('div[data-yaff-widget-index="' + (index - 1) + '"]');
+                        widget.detach().insertBefore(widgetBefore);   
+                        widget.attr('data-yaff-widget-index', (index - 1));
+                        widgetBefore.attr('data-yaff-widget-index', index);
+                    }
+                    if(direction == 'right') {
+                        var widgetAfter = $('div[data-yaff-widget-index="' + (index + 1) + '"]');                        
+                        widget.detach().insertAfter(widgetAfter);
+                        widget.attr('data-yaff-widget-index', (index + 1));
+                        widgetAfter.attr('data-yaff-widget-index', index);
+                    }
+                    $('.yaff-widget-move-left').css('display', 'inline-block');
+                    $('.yaff-widget-move-right').css('display', 'inline-block');
+                    
+                    $($('.yaff-widget-move-left')[0]).css('display', 'none');
+                    $($('.yaff-widget-move-right')[$('.yaff-widget-move-right').length-1]).css('display', 'none');
                 }).fail(function(data) {
                     location.reload();
                     yaff.util.log("Error: " + data); 

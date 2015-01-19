@@ -70,12 +70,10 @@
         var select = $('<select name="reading">');
         var readingValue = {% if widget is not null %} '{{ widget.reading }}' {% else %} null {% endif %};
         for(reading in devices[yaff.dashboard.getDeviceFromForm()].Readings) {
-            var option;
+            var option = $('<option></option>');
             if(readingValue != null) {
                 if(reading == readingValue) {
                     option = $('<option selected></option>');
-                } else {
-                    option = $('<option></option>');
                 }
             }
             select.append(option.val(reading).html(reading));

@@ -58,6 +58,10 @@
                 <source>dashboard.widget.move.error</source>
                 <target>Beim verschieben des Widgets trat ein Fehler auf.</target>
             </trans-unit>
+            <trans-unit id="15">
+                <source>dashboard.max.widgets</source>
+                <target>max. Anzahl erreicht</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

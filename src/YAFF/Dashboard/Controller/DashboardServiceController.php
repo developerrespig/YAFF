@@ -133,7 +133,6 @@
             }
             
             if($ret) {
-                $this->app['session']->getFlashBag()->add('success', 'dashboard.widget.move.successful');
                 $response->setStatusCode(200);
             } else {
                 $this->app['session']->getFlashBag()->add('danger', 'dashboard.widget.move.error');
