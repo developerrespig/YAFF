@@ -1,0 +1,93 @@
+{% extends 'Base/Views/base.html.twig' %}
+
+{% block title %}
+    {{ 'generalconfig.title'|trans }}
+{% endblock %}
+
+{% block description %}
+    {{ 'generalconfig.description'|trans }}
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <form id="generalconfig-form" class="form-horizontal" role="form" onsubmit="return yaff.generalconfig.save('#generalconfig-form')">
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">{{ 'generalconfig.dashboard'|trans }}</div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">{{ 'generalconfig.columns'|trans }}</label>
+
+                                        <div class="col-sm-4">
+                                            <select name="columns">
+                                                <option value="1" {% if config.columns == 1 %}selected{% endif %}>1</option>
+                                                <option value="2" {% if config.columns == 2 %}selected{% endif %}>2</option>
+                                                <option value="3" {% if config.columns == 3 %}selected{% endif %}>3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">{{ 'generalconfig.rows'|trans }}</label>
+
+                                        <div class="col-sm-4">
+                                            <select name="rows">
+                                                <option value="1" {% if config.rows == 1 %}selected{% endif %}>1</option>
+                                                <option value="2" {% if config.rows == 2 %}selected{% endif %}>2</option>
+                                                <option value="3" {% if config.rows == 3 %}selected{% endif %}>3</option>
+                                                <option value="4" {% if config.rows == 4 %}selected{% endif %}>4</option>
+                                                <option value="5" {% if config.rows == 5 %}selected{% endif %}>5</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-sm-2 col-sm-offset-10">
+                                    <button type="submit" class="btn btn-primary">{{ 'button.save'|trans }}</button>
+                                    <input name="_csrf_token" value="{{ token }}" type="hidden">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $.ajaxSetup({
+            cache: false
+        });
+
+        yaff.generalconfig = {
+            // update the changes
+            save: function saveConfig(formId)
+            {
+                var url = "{{ path('generalconfig.save') }}";
+                $.ajax({
+                    url: url,
+                    type: "post",
+                    data: $(formId).serialize(),
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status);
+                    },
+                    success: function (data) {
+                        location.reload();
+                    }
+                });
+
+                return false;
+            }
+        };
+    </script>
+{% endblock %}

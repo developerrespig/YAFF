@@ -1,0 +1,106 @@
+<form id="create-widget-graph" class="form-horizontal" role="form" onsubmit="return yaff.dashboard.saveWidgetGraph({% if widget is not null %} {{ widget.id }} {% else %} -1 {% endif %})">
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row" id="flash-message-overlay">
+                <div class="row">
+                </div>
+            </div>
+            <div class="col-md-11">
+                <div class="form-group">
+                    <label for="inputTitle" class="col-sm-4 control-label">{{ 'dashboard.create.widget.graph.title'|trans }} *</label>
+
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="title" {% if widget is not null %} value="{{ widget.title }}" {% endif %} required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputDevice" class="col-sm-4 control-label">{{ 'dashboard.create.widget.graph.device'|trans }}</label>
+                    <div class="col-sm-8">
+                        <select id="device" name="device">
+                            {% for device in devices %}
+                                <option value="{{ attribute(device, 'Name') }}" {% if widget is not null and widget.device == attribute(device, 'Name') %} selected {% endif %}>{{ attribute(device, 'Name') }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>                        
+                </div>
+                <div class="form-group">
+                    <label for="inputReadings" class="col-sm-4 control-label">{{ 'dashboard.create.widget.graph.readings'|trans }}</label>
+                    <div class="col-sm-8">
+                        <select id="reading" name="reading">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-4"></div>
+                <div id="value" class="col-sm-8"></div>
+                <div class="form-group">
+                    <label for="inputReadings" class="col-sm-4 control-label">{{ 'dashboard.create.widget.graph.intervall'|trans }}</label>
+                    <div class="col-sm-8">
+                        <select name="interval">
+                            <option value="{{ 3600*12 }}" {% if widget is not null and widget.interval == 3600*12 %} selected {% endif %}>12 {{ 'hours'|trans }}</option>
+                            <option value="{{ 3600*24 }}" {% if widget is not null and widget.interval == 3600*24 %} selected {% endif %}>24 {{ 'hours'|trans }}</option>
+                            <option value="{{ 3600*24*7 }}" {% if widget is not null and widget.interval == 3600*24*7 %} selected {% endif %}>7 {{ 'days'|trans }}</option>
+                            <option value="{{ 3600*24*14 }}" {% if widget is not null and widget.interval == 3600*24*14 %} selected {% endif %}>14 {{ 'days'|trans }}</option>
+                            <option value="{{ 3600*24*30 }}" {% if widget is not null and widget.interval == 3600*24*30 %} selected {% endif %}>30 {{ 'days'|trans }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'button.cancel'|trans }}</button>
+        <input type="submit" value="{{ 'button.save'|trans }}" class="btn btn-primary"/>
+        <input name="_csrf_token" value="{{ token }}" type="hidden">
+    </div>
+</form>
+<script>
+    /**
+     * Fetches the selected device from the form
+     * @returns {String} device name
+     */
+    yaff.dashboard.getDeviceFromForm = function() {
+        return $('#device').val();
+    }
+    
+    /**
+     * Creates the selectable options for the selected device
+     */
+    yaff.dashboard.createOptionsReadings = function() {
+        var devices = {{ devices|json_encode()|raw }};
+        var select = $('<select name="reading">');
+        var readingValue = {% if widget is not null %} '{{ widget.reading }}' {% else %} null {% endif %};
+        for(reading in devices[yaff.dashboard.getDeviceFromForm()].Readings) {
+            var option = $('<option></option>');
+            if(readingValue != null) {
+                if(reading == readingValue) {
+                    option = $('<option selected></option>');
+                }
+            }
+            select.append(option.val(reading).html(reading));
+        }
+        $('#reading').html(select.html());
+        yaff.dashboard.getCurrentReadingValue();
+    }
+    
+    /**
+     * Fetches the current value for the selected reading in the form
+     */
+    yaff.dashboard.getCurrentReadingValue = function() {
+        var url = "{{ path('yaff.fhem.getDevice', {'device': 'placeholder'}) }}";
+        $('#value').html(yaff.util.getLoadingAnimation());
+        url = url.replace('placeholder', yaff.dashboard.getDeviceFromForm());
+        $.get(url, function(data) {
+            $('#value').html(data.Results[0].Readings[$('#reading').val()].Value);
+        });
+    }
+    
+    yaff.dashboard.saveWidgetGraph = function(id) {
+        var url = "{{ path('yaff.dashboard.save.widget.graph', {id: 'idPlaceholder'}) }}";
+        url = url.replace('idPlaceholder', id);
+        $.post(url, $('#create-widget-graph').serialize(), function(data) {
+            yaff.util.log("Response from saving Graph request: " + data);
+        });
+    }
+    
+    yaff.dashboard.createOptionsReadings();    
+</script>

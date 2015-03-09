@@ -7,10 +7,35 @@
     <meta name="keywords" content="{% block keywords %}{% endblock %}">
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ app.request.basepath }}/resources/css/bootstrap.paper.min.3.3.0.css">
+        <link rel="stylesheet" href="{{ app.request.basepath }}/resources/css/bootstrap-switch.min.css">
+        <link rel="stylesheet" href="{{ app.request.basepath }}/resources/css/style.css">
     {% endblock %}
     {% block javascripts %}
         <script type="text/javascript" src="{{ app.request.basepath }}/resources/js/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="{{ app.request.basepath }}/resources/js/jquery.flot.min.js"></script>
+        <script type="text/javascript" src="{{ app.request.basepath }}/resources/js/jquery.flot.resize.js"></script>
+        <script type="text/javascript" src="{{ app.request.basepath }}/resources/js/jquery.flot.time.js"></script>
         <script type="text/javascript" src="{{ app.request.basepath }}/resources/js/bootstrap.min.3.3.0.js"></script>
+        <script type="text/javascript" src="{{ app.request.basepath }}/resources/js/bootstrap-switch.min.js"></script>
+        <script>
+            var yaff = yaff || {};
+            
+            yaff.util = {
+                setContentModalLoading: function(id) {
+                    var content = '<div class="modal-body">' + this.getLoadingAnimation() + '</div>';
+                    $(id).html(content);
+                },
+                        
+                getLoadingAnimation: function() {
+                    var img = '<img src="{{ app.request.basepath }}/resources/images/ajax-loader.gif" />';
+                    return img;
+                },
+                
+                log: function(message) {
+                    console.log(message);
+                }
+            }
+        </script>
     {% endblock %}
     <!--<link rel="icon" type="image/x-icon" href="" />-->
 </head>
@@ -19,16 +44,17 @@
     {% block menu %}
         <div class="navbar navbar-inverse">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-inverse-collapse">
+                <button type="button" class="navbar-toggle" data-toggle="collapse"
+                        data-target=".navbar-inverse-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ path('yaff.overview') }}">{{ 'nav.title'|trans }}</a>
+                <a class="navbar-brand" href="{{ path('yaff.dashboard') }}">{{ 'nav.title'|trans }}</a>
             </div>
             <div style="" aria-expanded="true" class="navbar-collapse navbar-inverse-collapse collapse in">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Active</a></li>
+                    <li><a href="{{ path('yaff.dashboard') }}">{{ 'nav.dashboard'|trans }}</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if is_granted('ROLE_ADMIN') %}
@@ -38,16 +64,24 @@
                                         class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ path('users.overview') }}"><span
-                                                class="glyphicon glyphicon-user"></span> {{ 'nav.users'|trans }}</a></li>
+                                                class="glyphicon glyphicon-user"></span> {{ 'nav.users'|trans }}</a>
+                                </li>
+                                <li><a href="{{ path('generalconfig.overview') }}"><span
+                                                class="glyphicon glyphicon-cog"></span> {{ 'nav.generalconfig'|trans }}
+                                    </a></li>
                                 <li><a href="{{ path('fhemconfig.overview') }}"><span
-                                                class="glyphicon glyphicon-pencil"></span> {{ 'nav.fhemconfig'|trans }}</a></li>
+                                                class="glyphicon glyphicon-home"></span> {{ 'nav.fhemconfig'|trans }}
+                                    </a></li>
                             </ul>
                         </li>
                     {% endif %}
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ 'nav.welcome'|trans({ '%user%': app.security.getToken().getUser().getUsername() }) }}  <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle"
+                           data-toggle="dropdown">{{ 'nav.welcome'|trans({ '%user%': app.security.getToken().getUser().getUsername() }) }}
+                            <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ path('logout') }}"><span class="glyphicon glyphicon-off"></span> {{ 'nav.logout'|trans }}</a></li>
+                            <li><a href="{{ path('logout') }}"><span
+                                            class="glyphicon glyphicon-off"></span> {{ 'nav.logout'|trans }}</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -72,7 +106,7 @@
             </div>
         </div>
     {% endblock %}
-    
+
     {% block content %}{% endblock %}
 
 {% endblock %}

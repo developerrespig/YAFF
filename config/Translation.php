@@ -7,9 +7,10 @@ $app['translator'] = $app->share($app->extend('translator', function ($translato
 
     $translator->addResource('xliff', __DIR__ . '/../src/YAFF/Login/Translations/de.xlf', 'de');
     $translator->addResource('xliff', __DIR__ . '/../src/YAFF/Base/Translations/de.xlf', 'de');
-    $translator->addResource('xliff', __DIR__ . '/../src/YAFF/Overview/Translations/de.xlf', 'de');
+    $translator->addResource('xliff', __DIR__ . '/../src/YAFF/Dashboard/Translations/de.xlf', 'de');
     $translator->addResource('xliff', __DIR__ . '/../src/YAFF/Users/Translations/de.xlf', 'de');
     $translator->addResource('xliff', __DIR__ . '/../src/YAFF/FHEMConfiguration/Translations/de.xlf', 'de');
+    $translator->addResource('xliff', __DIR__ . '/../src/YAFF/GeneralConfiguration/Translations/de.xlf', 'de');
 
     return $translator;
 }));

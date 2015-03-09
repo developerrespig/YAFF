@@ -28,3 +28,13 @@
     $app['FHEMConfigurationService'] = $app->share(function ($app) {
         return new YAFF\FHEMConfiguration\Service\FHEMConfigurationService($app);
     });
+    $app['GeneralConfigurationService'] = $app->share(function ($app) {
+        return new YAFF\GeneralConfiguration\Service\GeneralConfigurationService($app);
+    });
+    $app['FHEMService'] = $app->share(function ($app) {
+        return new YAFF\FHEM\Service\FHEMService($app);
+    });
+    $app['DashboardService'] = $app->share(function ($app) {
+        return new YAFF\Dashboard\Service\DashboardService($app);
+    });
+

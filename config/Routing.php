@@ -1,10 +1,23 @@
 <?php
-    $app['yaff.overview'] = $app->share(function () use ($app) {
-            return new YAFF\Overview\Controller\OverviewServiceController($app);
+    /**
+     * Dashboard
+     */
+    $app['yaff.dashboard'] = $app->share(function () use ($app) {
+            return new YAFF\Dashboard\Controller\DashboardServiceController($app);
     });
 	
-    $app->get('/', "yaff.overview:indexAction")
-        ->bind('yaff.overview');
+    $app->get('/', "yaff.dashboard:indexAction")
+        ->bind('yaff.dashboard');
+    $app->get('/create/widget/graph', "yaff.dashboard:showFormWidgetGraphAction")
+        ->bind('yaff.dashboard.create.widget.graph');
+    $app->get('/edit/widget/graph/{id}', "yaff.dashboard:showFormWidgetGraphAction")
+        ->bind('yaff.dashboard.edit.widget.graph');    
+    $app->post('/save/widget/graph/{id}', "yaff.dashboard:saveWidgetGraphAction")
+        ->bind('yaff.dashboard.save.widget.graph');
+    $app->get('/delete/widget/{id}', "yaff.dashboard:deleteWidgetAction")
+        ->bind('yaff.dashboard.delete.widget');
+    $app->get('/move/widget/{id}/{direction}', "yaff.dashboard:moveWidgetAction")
+        ->bind('yaff.dashboard.move.widget');
     
     /**
      * Login
@@ -39,6 +52,17 @@
         ->bind('users.dodelete.user');
     
     /**
+     * General Configuration
+     */
+    $app['generalconfig.management'] = $app->share(function () use ($app) {
+    	return new YAFF\GeneralConfiguration\Controller\GeneralConfigurationController($app);
+    });
+
+    $app->get('/generalconfig/', "generalconfig.management:indexAction")
+    	->bind('generalconfig.overview');
+    $app->post('/generalconfig/save', "generalconfig.management:saveAction")
+        ->bind('generalconfig.save');
+    /**
      * FHEM Configuration
      */
     $app['fhemconfig.management'] = $app->share(function () use ($app) {
@@ -53,3 +77,15 @@
     $app->post('/fhemconfig/{id}/update', "fhemconfig.management:updateConfigAction")
         ->bind('fhemconfig.update.config');
  
+    /**
+     * FHEM Service
+     */
+    $app['yaff.fhem.service'] = $app->share(function () use ($app) {
+        return new YAFF\FHEM\Controller\FHEMServiceController($app);
+    });
+
+    $app->get('/fhem/get/values/{device}/{type}/{seconds}', "yaff.fhem.service:getValuesAction")
+        ->bind('yaff.fhem.getValues');
+    $app->get('/fhem/get/device/{device}', "yaff.fhem.service:getDeviceAction")
+        ->bind('yaff.fhem.getDevice');
+?>

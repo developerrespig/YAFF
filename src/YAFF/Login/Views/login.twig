@@ -8,7 +8,7 @@
     {{ parent() }}
     <script>
         if ($("body div .navbar").length > 0) {
-            window.location.href = "{{ path('yaff.overview') }}";
+            window.location.href = "{{ path('yaff.dashboard') }}";
         } else {
             $(document).ready(function () {
                 $("body div").removeClass("hidden");

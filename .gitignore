@@ -3,3 +3,9 @@ composer.lock
 vendor/
 /nbproject/
 cache/templates
+.idea
+config/app.db
+cache/
+.settings/
+.project
+.buildpath

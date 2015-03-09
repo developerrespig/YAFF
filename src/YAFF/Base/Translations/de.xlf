@@ -34,33 +34,49 @@
                 <source>nav.welcome</source>
                 <target>Willkommen, %user%</target>
             </trans-unit>
-            
             <trans-unit id="9">
+                <source>nav.generalconfig</source>
+                <target>Allgemeine Einstellungen</target>
+            </trans-unit>
+            <trans-unit id="17">
+                <source>nav.dashboard</source>
+                <target>Dashboard</target>
+            </trans-unit>
+            <trans-unit id="18">
+                <source>hours</source>
+                <target>Stunden</target>
+            </trans-unit>
+            <trans-unit id="19">
+                <source>days</source>
+                <target>Tage</target>
+            </trans-unit>
+            
+            <trans-unit id="10">
                 <source>button.cancel</source>
                 <target>Abbrechen</target>
             </trans-unit>
-            <trans-unit id="10">
+            <trans-unit id="11">
                 <source>button.delete</source>
                 <target>Löschen</target>
             </trans-unit>
-            <trans-unit id="11">
+            <trans-unit id="12">
                 <source>button.add</source>
                 <target>Hinzufügen</target>
             </trans-unit>
-            <trans-unit id="12">
+            <trans-unit id="13">
                 <source>button.accept</source>
                 <target>Übernehmen</target>
             </trans-unit>
-            <trans-unit id="13">
+            <trans-unit id="14">
                 <source>button.edit</source>
                 <target>Bearbeiten</target>
             </trans-unit>
-            <trans-unit id="14">
+            <trans-unit id="15">
                 <source>button.save</source>
                 <target>Speichern</target>
             </trans-unit>
             
-            <trans-unit id="15">
+            <trans-unit id="16">
                 <source>flash.mandatory</source>
                 <target>Bitte alle Pflichtfelder ausfüllen.</target>
             </trans-unit>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="de" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>generalconfig.title</source>
+                <target>YAFF - Allgemeine Einstellungen</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>generalconfig.dashboard</source>
+                <target>Dashboard</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>generalconfig.columns</source>
+                <target>Spalten</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>generalconfig.rows</source>
+                <target>Zeilen</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>generalconfig.description</source>
+                <target>YAFF - Allgemeine Einstellungen</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>generalconfig.flash.save.success</source>
+                <target>Die Einstellungen wurden erfolgreich gespeichert.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

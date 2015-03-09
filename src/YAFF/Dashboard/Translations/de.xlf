@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="de" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>dashboard.title</source>
+                <target>YAFF - Übersicht</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>dashboard.description</source>
+                <target>YAFF - Übersicht</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>dashboard.modal.add</source>
+                <target>Widget hinzufügen</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>dashboard.create.widget.graph.device</source>
+                <target>Gerät</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>dashboard.create.widget.graph.readings</source>
+                <target>Messwert</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>dashboard.create.widget.graph.title</source>
+                <target>Titel</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>dashboard.create.widget.graph.intervall</source>
+                <target>Zeitraum</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>dashboard.edit.mode.off</source>
+                <target>Bearbeitungsmodus: Aus</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>dashboard.edit.mode.on</source>
+                <target>Bearbeitungsmodus: An</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>dashboard.widget.delete.successful</source>
+                <target>Widget wurde erfolgreich gelöscht</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>dashboard.widget.delete.error.not.found</source>
+                <target>Löschen fehlgeschlagen. Widget existiert nicht!</target>
+            </trans-unit>
+            <trans-unit id="12">
+                <source>dashboard.widget.create.graph.successful</source>
+                <target>Widget wurde erfolgreich erstellt.</target>
+            </trans-unit>
+            <trans-unit id="13">
+                <source>dashboard.widget.edit.graph.successful</source>
+                <target>Das Widget wurde erfolgreich editiert.</target>
+            </trans-unit>
+            <trans-unit id="14">
+                <source>dashboard.widget.move.error</source>
+                <target>Beim verschieben des Widgets trat ein Fehler auf.</target>
+            </trans-unit>
+            <trans-unit id="15">
+                <source>dashboard.max.widgets</source>
+                <target>max. Anzahl erreicht</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
