@@ -4,7 +4,6 @@ namespace YAFF\FHEM\Service;
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Response;
-
 use YAFF\Database\Entity\FHEMConfiguration;
 
 /**
@@ -12,9 +11,8 @@ use YAFF\Database\Entity\FHEMConfiguration;
  *
  * @author Martin
  */
+class FHEMService {
 
-class FHEMService
-{
     private $app = null;
 
     public function __construct(Application $app) {
@@ -29,7 +27,7 @@ class FHEMService
         $em = $this->app['orm.em'];
         $configs = $em->getRepository("\YAFF\Database\Entity\FHEMConfiguration")->findAll();
 
-        if(count($configs) != 0) {
+        if (count($configs) != 0) {
             $return = $configs[0];
         } else {
             $return = null;
@@ -45,8 +43,8 @@ class FHEMService
      */
     public function getUrl($command) {
         $config = $this->getFHEMConfig();
-        if($config) {
-            $url = "http://" . $config->getHost() . ":" . $config->getPort() . "/fhem?cmd=" . $command . "&XHR=1";
+        if ($config) {
+            $url = "http://" . $config->getHost() . ":" . $config->getPort() . "/fhem?cmd=" . urlencode($command) . "&XHR=1";
         } else {
             $url = null;
         }
@@ -75,7 +73,7 @@ class FHEMService
         }
         $response = curl_exec($curl);
 
-        if(curl_errno($curl)) {
+        if (curl_errno($curl)) {
             $statusCode = 500;
             $response = "Error: " . curl_error($curl);
         } else {
@@ -85,29 +83,43 @@ class FHEMService
         curl_close($curl);
 
         return new Response(
-            $response,
-            $statusCode,
-            ['Content-Type' => 'application/json']
+                $response, $statusCode, ['Content-Type' => 'application/json']
         );
     }
-    
+
     public function getFHEMJsonList() {
         $url = $this->getUrl("jsonlist2");
-        $response = $this->createRequest($url);        
-        if($response->getStatusCode() == 200) {
+        $response = $this->createRequest($url);
+        if ($response->getStatusCode() == 200) {
             $jsonlist = $response->getContent();
             $jsonArray = json_decode($jsonlist)->{'Results'};
         }
         return $jsonArray;
     }
-    
+
     public function getFHEMDevices() {
         $devices = array();
         $jsonArray = $this->getFHEMJsonList();
-        for($i = 0; $i < count($jsonArray); $i++) {
+        for ($i = 0; $i < count($jsonArray); $i++) {
             $devices[$jsonArray[$i]->{'Name'}] = $jsonArray[$i];
         }
         return $devices;
     }
+
+    /**
+     * Sets the party mode for the passed device
+     * Syntax: set $device controlParty 10 21.03.15 13:30 21.03.15 14:00
+     * @param String $device
+     * @param String $start
+     * @param String $end
+     */
+    public function setPartyMode($device, $start, $end) {
+        $command = "set " . $device . " controlParty 10 " . $start . " " . $end;
+        $url = $this->getUrl($command);
+        $response = $this->createRequest($url);
+        return ($response->getContent() === "");
+    }
+
 }
+
 ?>
