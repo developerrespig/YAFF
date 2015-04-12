@@ -91,6 +91,10 @@ class FHEMService
         );
     }
     
+    /**
+     * Fetches all information which the command jsonlist2 from FHEM provides
+     * @return Object the device list
+     */
     public function getFHEMJsonList() {
         $url = $this->getUrl("jsonlist2");
         $response = $this->createRequest($url);        
@@ -101,6 +105,10 @@ class FHEMService
         return $jsonArray;
     }
     
+    /**
+     * Creates an array of alle FHEM devices which may be accessed through their name
+     * @return array the FHEM devices as an array
+     */
     public function getFHEMDevices() {
         $devices = array();
         $jsonArray = $this->getFHEMJsonList();
@@ -108,6 +116,22 @@ class FHEMService
             $devices[$jsonArray[$i]->{'Name'}] = $jsonArray[$i];
         }
         return $devices;
+    }
+    
+    /**
+     * Toggles the state of the provided Switch
+     * @param type $switch
+     * @return boolean
+     */
+    public function toggleSwitch($switch) {
+        $commando = "set " . $switch . " off";
+        $url = $this->getUrl($commando);
+        $response = $this->createRequest($url);
+        if($response->getStatusCode() == 200) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 ?>
