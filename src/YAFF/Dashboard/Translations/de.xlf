@@ -62,6 +62,10 @@
                 <source>dashboard.max.widgets</source>
                 <target>max. Anzahl erreicht</target>
             </trans-unit>
+            <trans-unit id="16">
+                <source>dashboard.widgets.graph.name</source>
+                <target>Graph Widget</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -28,7 +28,7 @@
             <div class="col-sm-10 col-sm-offset-1">
                 <div class="row" id="dashboard-menu-bar" style="display: none;">
                     <div class="btn-group">
-                    <button type="button" id="yaff-dashboard-create-widget" class="btn btn-default" onclick="yaff.dashboard.modalCreateWidgetGraph()" data-toggle="modal" data-target="#newWidgetModal"><span class="glyphicon glyphicon-plus"></span> {{ 'dashboard.modal.add'|trans }}</button>
+                    <button type="button" id="yaff-dashboard-create-widget" class="btn btn-default" onclick="yaff.dashboard.modalCreateWidget()" data-toggle="modal" data-target="#newWidgetModal"><span class="glyphicon glyphicon-plus"></span> {{ 'dashboard.modal.add'|trans }}</button>
                     </div>
                     <hr>
                 </div>
@@ -86,7 +86,16 @@
     <script>
         yaff.dashboard = {
             /**
-             * Fetches the content for the create a graph widget
+             * Builds the url for the "create a widget" dialog and calls the request method
+             */
+            modalCreateWidget: function() {
+                var url = '{{ path('yaff.dashboard.create.widget') }}';
+                callback = function() {};
+                this.modalLoadWidgetForm(url, callback);
+            },
+            
+            /**
+             * Builds the url for the "create a graph widget" dialog and calls the build callback method
              */
             modalCreateWidgetGraph: function() {
                 var url = '{{ path('yaff.dashboard.create.widget.graph') }}';
@@ -94,7 +103,7 @@
             },
                     
             /**
-             * Fetches the content for the edit a graph widget
+             * Builds the url for the "edit a graph widget" dialog and calls the build callback method
              */
             modalEditWidgetGraph: function(id) {
                 var url = '{{ path('yaff.dashboard.edit.widget.graph', {id: 'idPlaceholder'}) }}';
@@ -103,15 +112,25 @@
             },
                     
             /**
-             * Fetches the content for the modal and sets onchange event functions
+             * Builds the callback function for the "create / edit a graph widget" request and calls the request method
              */
-            modalLoadWidgetGraph: function(url) {
-                var idModal = '#modal-content-ajax';
-                yaff.util.setContentModalLoading(idModal);
-                $(idModal).load(url, function() {
+            modalLoadWidgetGraph: function(url, callback) {
+                callback = function() {
                     $('#device').change(yaff.dashboard.createOptionsReadings);
                     $('#reading').change(yaff.dashboard.getCurrentReadingValue);
                     yaff.dashboard.createOptionsReadings();
+                };
+                this.modalLoadWidgetForm(url, callback);
+            },
+                    
+            /**
+             * Starts the request for the passed url and calls the provided callback function when the request was successful
+             */
+            modalLoadWidgetForm: function(url, callback) {
+                var idModal = '#modal-content-ajax';
+                yaff.util.setContentModalLoading(idModal);
+                $(idModal).load(url, function() {                    
+                    callback();
                 });
             },
 

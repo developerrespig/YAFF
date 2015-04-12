@@ -8,6 +8,8 @@
 	
     $app->get('/', "yaff.dashboard:indexAction")
         ->bind('yaff.dashboard');
+    $app->get('/create/widget', "yaff.dashboard:showFormWidgetCreateAction")
+        ->bind('yaff.dashboard.create.widget');
     $app->get('/create/widget/graph', "yaff.dashboard:showFormWidgetGraphAction")
         ->bind('yaff.dashboard.create.widget.graph');
     $app->get('/edit/widget/graph/{id}', "yaff.dashboard:showFormWidgetGraphAction")
