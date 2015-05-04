@@ -87,6 +87,10 @@ class FHEMService {
         );
     }
 
+    /**
+     * Fetches all information which the command jsonlist2 from FHEM provides
+     * @return Object the device list
+     */
     public function getFHEMJsonList() {
         $url = $this->getUrl("jsonlist2");
         $response = $this->createRequest($url);
@@ -97,6 +101,10 @@ class FHEMService {
         return $jsonArray;
     }
 
+    /**
+     * Creates an array of alle FHEM devices which may be accessed through their name
+     * @return array the FHEM devices as an array
+     */
     public function getFHEMDevices() {
         $devices = array();
         $jsonArray = $this->getFHEMJsonList();
@@ -119,7 +127,65 @@ class FHEMService {
         $response = $this->createRequest($url);
         return ($response->getContent() === "");
     }
-
+    
+    /**
+     * Toggles the state of the provided Switch
+     * @param type $switch
+     * @return boolean
+     */
+    public function toggleSwitch($switch) {
+        $commando = "set " . $switch . " off";
+        $url = $this->getUrl($commando);
+        $response = $this->createRequest($url);
+        if($response->getStatusCode() == 200) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Gets the information for a single device from Fhem
+     * @param String $device
+     * @return String json
+     */
+    public function getDeviceAction($device) {
+        $command = "jsonlist2 " . $device;
+        $url = $this->getUrl($command);
+        $response = $this->createRequest($url);
+        
+        return $response;
+    }
+   
+    /**
+     * Gets all rooms with the appropriate devices from Fhem
+     * @return array the rooms
+     */
+    public function getRooms() {
+        $devices = $this->getFHEMDevices();
+        $rooms = array();
+        foreach($devices as $device) {
+            if(isset($device->Attributes)) {
+                if(isset($device->Attributes->room)) {   
+                    $roomName = $device->Attributes->room;                    
+                    if(isset($rooms[$roomName])) {                         
+                        $roomDevices = $rooms[$roomName]['devices'];
+                        array_push($roomDevices, $device->Name);
+                        $rooms[$roomName]['devices'] = $roomDevices;
+                    } else {
+                        $room = array();
+                        $room['name'] = $roomName;                        
+                        $roomDevices = array();
+                        array_push($roomDevices, $device->Name);                        
+                        $room['devices'] = $roomDevices;
+                        $rooms[$roomName] = $room;
+                    }
+                }
+            }
+        }
+        
+        return $rooms;
+    }
 }
 
 ?>

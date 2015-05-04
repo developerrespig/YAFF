@@ -43,9 +43,21 @@
         }
         
         /**
-         * Handles the form request for the creation of a new Graph Widget
-         * @return Response the form for a new Graph Widget
+         * Handles the form request for the creation of a new Widet.
+         * @return Response the form for a new Widget
          */
+        public function showFormWidgetCreateAction() {
+            $widgets = unserialize(WIDGETS);
+            
+            return $this->app['twig']->render('Dashboard/Views/form.widget.create.html.twig', array(
+                'widgets' => $widgets
+            ));
+        }
+
+        /**
+        * Handles the form request for the creation of a new Graph Widget
+        * @return Response the form for a new Graph Widget
+        */
         public function showFormWidgetGraphAction($id = -1) {
             $csrf = $this->app['csrf_protection'];
             $fhemService = $this->app['FHEMService'];
@@ -88,6 +100,21 @@
             }
             
             return $response;
+        }
+        
+        /**
+        * Handles the form request for the creation of a new Room Widget
+        * @return Response the form for a new Room Widget
+        */
+        public function showFormWidgetRoomAction($id = -1) {
+            $csrf = $this->app['csrf_protection'];
+            $fhemService = $this->app['FHEMService'];
+            $rooms = $fhemService->getRooms();
+            
+            return $this->app['twig']->render('Dashboard/Views/form.widget.room.html.twig', array(
+                'rooms' => $rooms,
+                'token' => $csrf->getCSRFTokenForForm()
+            ));
         }
         
         /**

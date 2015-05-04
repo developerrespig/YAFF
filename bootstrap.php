@@ -6,3 +6,4 @@
     require_once 'config/Database.php';
     require_once 'config/Security.php';
     require_once 'config/Translation.php';
+    require_once 'config/Widgets.php';
