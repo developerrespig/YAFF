@@ -133,5 +133,48 @@ class FHEMService
             return false;
         }
     }
+    
+    /**
+     * Gets the information for a single device from Fhem
+     * @param String $device
+     * @return String json
+     */
+    public function getDeviceAction($device) {
+        $command = "jsonlist2 " . $device;
+        $url = $this->getUrl($command);
+        $response = $this->createRequest($url);
+        
+        return $response;
+    }
+   
+    /**
+     * Gets all rooms with the appropriate devices from Fhem
+     * @return array the rooms
+     */
+    public function getRooms() {
+        $devices = $this->getFHEMDevices();
+        $rooms = array();
+        foreach($devices as $device) {
+            if(isset($device->Attributes)) {
+                if(isset($device->Attributes->room)) {   
+                    $roomName = $device->Attributes->room;                    
+                    if(isset($rooms[$roomName])) {                         
+                        $roomDevices = $rooms[$roomName]['devices'];
+                        array_push($roomDevices, $device->Name);
+                        $rooms[$roomName]['devices'] = $roomDevices;
+                    } else {
+                        $room = array();
+                        $room['name'] = $roomName;                        
+                        $roomDevices = array();
+                        array_push($roomDevices, $device->Name);                        
+                        $room['devices'] = $roomDevices;
+                        $rooms[$roomName] = $room;
+                    }
+                }
+            }
+        }
+        
+        return $rooms;
+    }
 }
 ?>

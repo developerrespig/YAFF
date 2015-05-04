@@ -103,6 +103,21 @@
         }
         
         /**
+        * Handles the form request for the creation of a new Room Widget
+        * @return Response the form for a new Room Widget
+        */
+        public function showFormWidgetRoomAction($id = -1) {
+            $csrf = $this->app['csrf_protection'];
+            $fhemService = $this->app['FHEMService'];
+            $rooms = $fhemService->getRooms();
+            
+            return $this->app['twig']->render('Dashboard/Views/form.widget.room.html.twig', array(
+                'rooms' => $rooms,
+                'token' => $csrf->getCSRFTokenForForm()
+            ));
+        }
+        
+        /**
          * Deletes the widget with the given id
          * @param type $id the widget id
          * @return Response

@@ -124,6 +124,17 @@
             },
                     
             /**
+             * Builds the url for the "create a room widget" dialog and calls the build callback method
+             */
+            modalCreateWidgetRoom: function() {
+                var url = '{{ path('yaff.dashboard.create.widget.room') }}';
+                callback = function() {
+                    yaff.util.log("Done");
+                }
+                this.modalLoadWidgetForm(url, callback);
+            },
+                    
+            /**
              * Starts the request for the passed url and calls the provided callback function when the request was successful
              */
             modalLoadWidgetForm: function(url, callback) {

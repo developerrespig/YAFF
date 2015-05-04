@@ -9,13 +9,15 @@
     $app->get('/', "yaff.dashboard:indexAction")
         ->bind('yaff.dashboard');
     $app->get('/create/widget', "yaff.dashboard:showFormWidgetCreateAction")
-        ->bind('yaff.dashboard.create.widget');
+        ->bind('yaff.dashboard.create.widget');    
     $app->get('/create/widget/graph', "yaff.dashboard:showFormWidgetGraphAction")
         ->bind('yaff.dashboard.create.widget.graph');
     $app->get('/edit/widget/graph/{id}', "yaff.dashboard:showFormWidgetGraphAction")
         ->bind('yaff.dashboard.edit.widget.graph');    
     $app->post('/save/widget/graph/{id}', "yaff.dashboard:saveWidgetGraphAction")
         ->bind('yaff.dashboard.save.widget.graph');
+    $app->get('/create/widget/room', "yaff.dashboard:showFormWidgetRoomAction")
+        ->bind('yaff.dashboard.create.widget.room');
     $app->get('/delete/widget/{id}', "yaff.dashboard:deleteWidgetAction")
         ->bind('yaff.dashboard.delete.widget');
     $app->get('/move/widget/{id}/{direction}', "yaff.dashboard:moveWidgetAction")

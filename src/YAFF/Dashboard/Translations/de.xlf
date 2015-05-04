@@ -66,6 +66,18 @@
                 <source>dashboard.widgets.graph.name</source>
                 <target>Graph Widget</target>
             </trans-unit>
+            <trans-unit id="17">
+                <source>dashboard.widgets.room.name</source>
+                <target>Raum Widget</target>
+            </trans-unit>
+            <trans-unit id="18">
+                <source>dashboard.create.widget.room.room</source>
+                <target>Raum</target>
+            </trans-unit>
+            <trans-unit id="19">
+                <source>dashboard.create.widget.room.devices</source>
+                <target>Erkannte Geräte</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
