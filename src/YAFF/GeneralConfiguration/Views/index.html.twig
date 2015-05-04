@@ -17,11 +17,11 @@
                         <div class="panel-heading">{{ 'generalconfig.dashboard'|trans }}</div>
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-2">
+                                <div class="col-md-4 col-md-offset-2">
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">{{ 'generalconfig.columns'|trans }}</label>
+                                        <label class="col-md-2 control-label">{{ 'generalconfig.columns'|trans }}</label>
 
-                                        <div class="col-sm-4">
+                                        <div class="col-md-4">
                                             <select name="columns">
                                                 <option value="1" {% if config.columns == 1 %}selected{% endif %}>1</option>
                                                 <option value="2" {% if config.columns == 2 %}selected{% endif %}>2</option>
@@ -30,11 +30,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-4 col-sm-offset-2">
+                                <div class="col-md-4 col-md-offset-2">
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">{{ 'generalconfig.rows'|trans }}</label>
+                                        <label class="col-md-2 control-label">{{ 'generalconfig.rows'|trans }}</label>
 
-                                        <div class="col-sm-4">
+                                        <div class="col-md-4">
                                             <select name="rows">
                                                 <option value="1" {% if config.rows == 1 %}selected{% endif %}>1</option>
                                                 <option value="2" {% if config.rows == 2 %}selected{% endif %}>2</option>
@@ -49,7 +49,7 @@
                         </div>
                         <div class="panel-footer">
                             <div class="row">
-                                <div class="col-sm-2 col-sm-offset-10">
+                                <div class="col-md-2 col-md-offset-10">
                                     <button type="submit" class="btn btn-primary">{{ 'button.save'|trans }}</button>
                                     <input name="_csrf_token" value="{{ token }}" type="hidden">
                                 </div>
