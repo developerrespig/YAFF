@@ -1,0 +1,50 @@
+<div class="modal-body">
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+            <form class="form" id="datetime" onsubmit="return yaff.partymode.start()">
+                <label for="start">{{ 'partymode.startdate'|trans }}</label>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="start" name="start" value="" required>
+                </div>
+                <label for="end">{{ 'partymode.enddate'|trans }}</label>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="end" name="end" value="" required>
+                </div>
+                <button class="btn btn-default" type="submit">{{ 'button.start'|trans }}</button>
+            </form>
+        </div>
+    </div><!-- /.row -->
+</div>
+<div class="modal-footer">
+</div>
+<script>
+    var startInput = $('#start'), endInput = $('#end'), locale = '{{ app.request.locale }}';
+
+    startInput.datetimepicker({
+        locale: locale,
+        format: 'DD.MM.YY HH:mm',
+        sideBySide: true,
+        stepping: 30
+    });
+    endInput.datetimepicker({
+        locale: locale,
+        format: 'D.M.YY H:mm',
+        sideBySide: true,
+        stepping: 30
+    });
+    startInput.on('dp.change', function (e) {
+        endInput.data('DateTimePicker').minDate(e.date);
+    });
+    endInput.on('dp.change', function (e) {
+        startInput.data('DateTimePicker').maxDate(e.date);
+    });
+
+    yaff.partymode = {
+        start: function () {
+            var url = "{{ path('yaff.partymode.start') }}";
+            $.post(url, $('#datetime').serialize(), function (data) {
+                yaff.util.log("Response from starting partymode: " + data);
+            });
+        }
+    }
+</script>

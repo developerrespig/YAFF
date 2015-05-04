@@ -49,6 +49,10 @@
             <trans-unit id="19">
                 <source>days</source>
                 <target>Tage</target>
+            </trans-unit>                  
+            <trans-unit id="20">
+                <source>nav.partymode</source>
+                <target>Urlaubsmodus</target>
             </trans-unit>
             
             <trans-unit id="10">
@@ -74,11 +78,35 @@
             <trans-unit id="15">
                 <source>button.save</source>
                 <target>Speichern</target>
-            </trans-unit>
-            
+            </trans-unit>           
             <trans-unit id="16">
                 <source>flash.mandatory</source>
                 <target>Bitte alle Pflichtfelder ausfüllen.</target>
+            </trans-unit>            
+             <trans-unit id="21">
+                <source>button.start</source>
+                <target>Start</target>
+            </trans-unit> 
+                       
+            <trans-unit id="22">
+                <source>partymode.startdate</source>
+                <target>Startzeitpunkt</target>
+            </trans-unit>
+            <trans-unit id="23">
+                <source>partymode.enddate</source>
+                <target>Endzeitpunkt</target>
+            </trans-unit>
+            <trans-unit id="24">
+                <source>dashboard.partymode.setup</source>
+                <target>Urlaubsmodus Konfiguration</target>
+            </trans-unit>
+            <trans-unit id="25">
+                <source>partymode.start.successful</source>
+                <target>Der Urlaubsmodus wurde erfolgreich aktiviert</target>
+            </trans-unit>
+            <trans-unit id="26">
+                <source>partymode.start.error</source>
+                <target>Beim Aktivieren des Urlaubsmodus trat ein Fehler auf. Es kann sein, dass einige Thermostate erfolgreich gesetzt wurden, andere wiederrum nicht.</target>
             </trans-unit>
         </body>
     </file>

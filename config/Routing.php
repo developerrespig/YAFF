@@ -1,5 +1,17 @@
 <?php
     /**
+     * Base
+     */
+    $app['yaff.partymode'] = $app->share(function () use ($app) {
+        return new YAFF\Base\Controller\PartyServiceController($app);
+    });
+
+    $app->get('/partymode/modal', "yaff.partymode:modalAction")
+        ->bind('yaff.partymode.init');
+    $app->post('/partymode/start', "yaff.partymode:startPartyModeAction")
+        ->bind('yaff.partymode.start');
+    
+    /**
      * Dashboard
      */
     $app['yaff.dashboard'] = $app->share(function () use ($app) {

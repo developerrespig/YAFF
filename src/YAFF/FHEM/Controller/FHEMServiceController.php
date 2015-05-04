@@ -21,7 +21,7 @@
         {
             $startTimestamp = date('Y-m-d_H:i:s', strtotime("-" . $seconds . " seconds"));
             $endTimestamp = date('Y-m-d_H:i:s', time());
-            $command = "get%20log_datenbank%20-%20webchart%20" . $startTimestamp . "%20" . $endTimestamp . "%20" . $device . "%20timerange%20TIMESTAMP%20" . $type;
+            $command = "get log_datenbank - webchart " . $startTimestamp . " " . $endTimestamp . " " . $device . " timerange TIMESTAMP " . $type;
             $url = $this->service->getUrl($command);
             if($url) {
                 $response = $this->service->createRequest($url);
@@ -35,7 +35,7 @@
         }
 
         public function getDeviceAction($device) {
-            $command = "jsonlist2%20" . $device;
+            $command = "jsonlist2 " . $device;
             $url = $this->service->getUrl($command);
             if($url) {
                 $response = $this->service->createRequest($url);
