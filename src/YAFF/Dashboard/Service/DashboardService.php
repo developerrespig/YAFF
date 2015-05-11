@@ -3,7 +3,7 @@
 namespace YAFF\Dashboard\Service;
 
 use Silex\Application;
-use YAFF\Database\Entity\Widget;
+use YAFF\Database\Entity\GraphWidget;
 
 use Symfony\Component\HttpFoundation\Request;
 
@@ -42,10 +42,10 @@ class DashboardService
      * @param int $id
      * @return \YAFF\Database\Entity\Widget
      */
-    public function getWidgetFromForm(Request $request, $id = -1) {
+    public function getWidgetGraphFromForm(Request $request, $id = -1) {
         if ($id == -1) {
-            $widget = new Widget();
-            $widgets = $this->em->getRepository("\YAFF\Database\Entity\Widget")->findAll();
+            $widget = new GraphWidget();
+            $widgets = $this->em->getRepository("\YAFF\Database\Entity\GraphWidget")->findAll();
             $widgetsCount = sizeof($widgets);
             if( $widgetsCount > 0) {
                 $widget->setIdx($widgets[$widgetsCount - 1]->getIdx() + 1);
@@ -53,7 +53,7 @@ class DashboardService
                 $widget->setIdx(1);
             }
         } else {
-            $widget = $this->em->getRepository("\YAFF\Database\Entity\Widget")->find($id);
+            $widget = $this->em->getRepository("\YAFF\Database\Entity\GraphWidget")->find($id);
         }
 
         $widget->setTitle($request->get('title'));
@@ -71,9 +71,9 @@ class DashboardService
      * @return boolean
      */
     public function moveWidgetLeft($id) {
-        $widget = $this->em->getRepository("\YAFF\Database\Entity\Widget")->findById($id);
-        if(sizeof($widget) >= 1) {
-            $widgetLeft = $this->em->getRepository("\YAFF\Database\Entity\Widget")->findLeftWidget($widget[0]->getIdx());
+        $widget = $this->em->getRepository("\YAFF\Database\Entity\GraphWidget")->findById($id);
+        if(sizeof($widget) == 1) {
+            $widgetLeft = $this->em->getRepository("\YAFF\Database\Entity\GraphWidget")->findLeftWidget($widget[0]->getIdx());
             
             if(sizeof($widgetLeft) >= 1) {
                 $this->changeIndexes($widget[0], $widgetLeft[0]); 
@@ -89,9 +89,9 @@ class DashboardService
      * @return boolean
      */
     public function moveWidgetRight($id) {
-        $widget = $this->em->getRepository("\YAFF\Database\Entity\Widget")->findById($id);
-       if(sizeof($widget) >= 1) {
-            $widgetRight = $this->em->getRepository("\YAFF\Database\Entity\Widget")->findRightWidget($widget[0]->getIdx());
+        $widget = $this->em->getRepository("\YAFF\Database\Entity\GraphWidget")->findById($id);
+       if(sizeof($widget) == 1) {
+            $widgetRight = $this->em->getRepository("\YAFF\Database\Entity\GraphWidget")->findRightWidget($widget[0]->getIdx());
             
             if(sizeof($widgetRight) >= 1) {
                 $this->changeIndexes($widget[0], $widgetRight[0]); 

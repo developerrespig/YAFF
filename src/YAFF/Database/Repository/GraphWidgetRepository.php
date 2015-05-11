@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\Criteria;
  * WidgetRepository
  *
  */
-class WidgetRepository extends EntityRepository
+class GraphWidgetRepository extends EntityRepository
 {
     /**
      * Overwrites the findAll method and returns all widgets sorted by the idx (ascending)
