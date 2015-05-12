@@ -1,4 +1,4 @@
-<form id="create-widget-graph" class="form-horizontal" role="form" onsubmit="return yaff.dashboard.saveWidgetGraph(-1)">
+<form id="create-widget-graph" class="form-horizontal" role="form" onsubmit="return yaff.dashboard.saveWidgetRoom(-1)">
     <div class="modal-body">
         <div class="container-fluid">
             <div class="row" id="flash-message-overlay">
@@ -32,11 +32,10 @@
     </div>
 </form>
 <script>
-    var rooms2 = JSON.parse('{{ rooms|json_encode|raw }}');
+    yaff.dashboard.rooms = JSON.parse('{{ rooms|json_encode|raw }}');
     
-    yaff.dashboard.showRoomDevices = function() {        
-        var rooms = JSON.parse('{{ rooms|json_encode|raw }}');
-        var devices = rooms2[$('#room').val()].devices;
+    yaff.dashboard.showRoomDevices = function() {
+        var devices = yaff.dashboard.rooms[$('#room').val()].devices;
         
         var devicesHtml = "";
         for(var device in devices) {
@@ -46,6 +45,19 @@
         $('#devices').html(devicesHtml);
     };
     
+    yaff.dashboard.saveWidgetRoom = function(id) {
+        var url = "{{ path('yaff.dashboard.save.widget.room', {'id': 'placeholder'}) }}";
+        url = url.replace('placeholder', id);
+        var room = yaff.dashboard.rooms[$('#room').val()];
+        
+        $.post(url, {room: JSON.stringify(room)}, function(data) {
+            yaff.util.log("Response from saving Room request: " + data);
+        });
+        
+        return true;
+    }
+    
     yaff.dashboard.showRoomDevices();
-    $('#room').change(yaff.dashboard.showRoomDevices);    
+    
+    $('#room').change(yaff.dashboard.showRoomDevices);
 </script>

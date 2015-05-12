@@ -18,6 +18,8 @@
         ->bind('yaff.dashboard.save.widget.graph');
     $app->get('/create/widget/room', "yaff.dashboard:showFormWidgetRoomAction")
         ->bind('yaff.dashboard.create.widget.room');
+    $app->post('/save/widget/room/{id}', "yaff.dashboard:saveWidgetRoomAction")
+        ->bind('yaff.dashboard.save.widget.room');
     $app->get('/delete/widget/{id}', "yaff.dashboard:deleteWidgetAction")
         ->bind('yaff.dashboard.delete.widget');
     $app->get('/move/widget/{id}/{direction}', "yaff.dashboard:moveWidgetAction")

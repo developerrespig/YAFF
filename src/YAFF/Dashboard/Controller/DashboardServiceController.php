@@ -117,19 +117,18 @@
             ));
         }
         
-        public function saveWidgetRoomAction() {
+        /**
+         * Saves the in the form provided information for a new room widget
+         * @param Request $request
+         */
+        public function saveWidgetRoomAction(Request $request, $id) {
             $csrf = $this->app['csrf_protection'];
             $response = new Response();
             $response->setStatusCode(500);
             if (($csrf->validateCSRFToken($request))) {
+                $room = json_decode($request->get('room'));
                 // TODO: embedd success or error message
                 $serviceDashboard = $this->app['DashboardService'];
-                $widget = $serviceDashboard->getWidgetGraphFromForm($request, $id);
-                $em = $this->app['orm.em'];
-                $em->persist($widget);
-                $em->flush();                
-                $this->app['session']->getFlashBag()->add('success', $message);
-                $response->setStatusCode(200);
             }
             
             return $response;
