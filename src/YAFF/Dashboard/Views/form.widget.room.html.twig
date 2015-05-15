@@ -54,10 +54,10 @@
         $.post(url, {room: JSON.stringify(room), _csrf_token: token}, function(data) {
             yaff.util.log("Response from saving Room request: " + data);
 
-            return true;
+            location.reload();
         });
 
-        return true;
+        return false;
     }
 
     yaff.dashboard.showRoomDevices();
