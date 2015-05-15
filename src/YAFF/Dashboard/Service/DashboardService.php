@@ -3,9 +3,12 @@
 namespace YAFF\Dashboard\Service;
 
 use Silex\Application;
-use YAFF\Database\Entity\GraphWidget;
 
 use Symfony\Component\HttpFoundation\Request;
+
+use YAFF\Database\Entity\GraphWidget;
+use YAFF\Database\Entity\RoomWidget;
+use YAFF\Database\Entity\Device;
 
 /**
  * Description of DashboardService
@@ -20,7 +23,7 @@ class DashboardService
     public function __construct(Application $app) {
         $this->em = $app['orm.em'];
     }
-    
+
     /**
      * Changes the indexes of the given widgets and persists the changes
      * @param type $widgetA widget A
@@ -33,7 +36,7 @@ class DashboardService
 
         $this->em->persist($widgetA);
         $this->em->persist($widgetB);
-        $this->em->flush();     
+        $this->em->flush();
     }
 
     /**
@@ -49,7 +52,7 @@ class DashboardService
             $widgetsCount = sizeof($widgets);
             if( $widgetsCount > 0) {
                 $widget->setIdx($widgets[$widgetsCount - 1]->getIdx() + 1);
-            } else {                
+            } else {
                 $widget->setIdx(1);
             }
         } else {
@@ -64,40 +67,81 @@ class DashboardService
 
         return $widget;
     }
-    
+
+    /**
+     * Create a new roomwidget from the given json information
+     * @param String json
+     * @return RoomWidget roomWidget
+     */
+    public function getWidgetRoomFromJSON($json)
+    {
+      $room = json_decode($json);
+
+      $roomWidget = new RoomWidget();
+      $roomWidget->setTitle($room->name);
+      $roomWidget->setIdx(1);
+
+      for ($i=0; $i < sizeof($room->devices); $i++) {
+          $device = new Device();
+          $device->setName($room->devices[$i]);
+          $device->setRoom($roomWidget);
+          $roomWidget->getDevices()->add($device);
+      }
+
+      return $roomWidget;
+    }
+
+    /**
+     * Gets the widget with the given id from the database.
+     * @param type $id
+     * @return object widget
+     */
+    private function getWidgetWithId($id) {
+      $widgetTypes = unserialize(WIDGETS);
+      foreach ($widgetTypes as $widgetType) {
+        $widget = $this->em->getRepository($widgetType['repository'])->findById($id);
+        if(sizeof($widget) == 1) {
+          return $widget[0];
+        }
+      }
+      return null;
+    }
+
+    // TODO: Refactoring
+    // TODO: get solution for findLeftWidget and findRightWidget
     /**
      * Moves the widget with the $id to the left
      * @param type $id
      * @return boolean
      */
     public function moveWidgetLeft($id) {
-        $widget = $this->em->getRepository("\YAFF\Database\Entity\GraphWidget")->findById($id);
-        if(sizeof($widget) == 1) {
+        $widget = $this->getWidgetWithId($id);
+        if($widget != null) {
             $widgetLeft = $this->em->getRepository("\YAFF\Database\Entity\GraphWidget")->findLeftWidget($widget[0]->getIdx());
-            
+
             if(sizeof($widgetLeft) >= 1) {
-                $this->changeIndexes($widget[0], $widgetLeft[0]); 
+                $this->changeIndexes($widget[0], $widgetLeft[0]);
                 return true;
             }
         }
-        return false;               
+        return false;
     }
-    
+
     /**
      * Moves the widget with the $id to the right
      * @param type $id
      * @return boolean
      */
     public function moveWidgetRight($id) {
-        $widget = $this->em->getRepository("\YAFF\Database\Entity\GraphWidget")->findById($id);
-       if(sizeof($widget) == 1) {
+        $widget = $this->getWidgetWithId($id);
+       if($widget != null) {
             $widgetRight = $this->em->getRepository("\YAFF\Database\Entity\GraphWidget")->findRightWidget($widget[0]->getIdx());
-            
+
             if(sizeof($widgetRight) >= 1) {
-                $this->changeIndexes($widget[0], $widgetRight[0]); 
+                $this->changeIndexes($widget[0], $widgetRight[0]);
                 return true;
             }
         }
-        return false;    
+        return false;
     }
 }

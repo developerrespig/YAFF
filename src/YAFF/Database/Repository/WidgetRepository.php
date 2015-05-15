@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\Criteria;
  * WidgetRepository
  *
  */
-class GraphWidgetRepository extends EntityRepository
+class WidgetRepository extends EntityRepository
 {
     /**
      * Overwrites the findAll method and returns all widgets sorted by the idx (ascending)
@@ -20,7 +20,7 @@ class GraphWidgetRepository extends EntityRepository
     {
         return $this->findBy(array(), array('idx' => 'ASC'));
     }
-    
+
     /**
      * Returns the widget which is on the left side of the widget with the given id
      * @param type $id
@@ -33,7 +33,7 @@ class GraphWidgetRepository extends EntityRepository
         $criteria->setMaxResults(1);
         return $this->matching($criteria);
     }
-    
+
     /**
      * Returns the widget which is on the right side of the widget with the given id
      * @param type $id

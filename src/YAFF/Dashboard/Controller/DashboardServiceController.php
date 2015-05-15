@@ -8,13 +8,15 @@
     use YAFF\GeneralConfiguration\Service\GeneralConfigurationService;
     use YAFF\GeneralConfiguration\Service\FHEMService;
     use YAFF\GeneralConfiguration\Service\DashboardService;
-    
+
     use YAFF\Database\Entity\GraphWidget;
+    use YAFF\Database\Entity\RoomWidget;
+    use YAFF\Database\Entity\Device;
 
     class DashboardServiceController
     {
         private $app = null;
-        
+
         /**
          * Constructor
          * @param Application $app the application
@@ -32,7 +34,7 @@
         {
             $generalConfigService = $this->app['GeneralConfigurationService'];
             $generalConfig = $generalConfigService->getConfig();
-            
+
             $em = $this->app['orm.em'];
             $widgets = $em->getRepository("\YAFF\Database\Entity\GraphWidget")->findAll();
 
@@ -41,14 +43,14 @@
                 'widgets' => $widgets
             ));
         }
-        
+
         /**
          * Handles the form request for the creation of a new Widet.
          * @return Response the form for a new Widget
          */
         public function showFormWidgetCreateAction() {
             $widgets = unserialize(WIDGETS);
-            
+
             return $this->app['twig']->render('Dashboard/Views/form.widget.create.html.twig', array(
                 'widgets' => $widgets
             ));
@@ -62,20 +64,20 @@
             $csrf = $this->app['csrf_protection'];
             $fhemService = $this->app['FHEMService'];
             $devices = $fhemService->getFHEMDevices();
-            
+
             $widget = null;
             if($id > -1) {
                 $em = $this->app['orm.em'];
-                $widget = $em->getRepository("\YAFF\Database\Entity\GraphWidget")->findById($id);                
+                $widget = $em->getRepository("\YAFF\Database\Entity\GraphWidget")->findById($id);
             }
-            
+
             return $this->app['twig']->render('Dashboard/Views/form.widget.graph.html.twig', array(
                 'devices' => $devices,
                 'widget' => $widget[0],
                 'token' => $csrf->getCSRFTokenForForm()
             ));
         }
-        
+
         /**
          * Saves the in the form provided information for a new graph widget
          * @param Request $request
@@ -89,19 +91,19 @@
                     $message = 'dashboard.widget.create.graph.successful';
                 } else {
                     $message = 'dashboard.widget.edit.graph.successful';
-                }                        
+                }
                 $serviceDashboard = $this->app['DashboardService'];
                 $widget = $serviceDashboard->getWidgetGraphFromForm($request, $id);
                 $em = $this->app['orm.em'];
                 $em->persist($widget);
-                $em->flush();                
+                $em->flush();
                 $this->app['session']->getFlashBag()->add('success', $message);
                 $response->setStatusCode(200);
             }
-            
+
             return $response;
         }
-        
+
         /**
         * Handles the form request for the creation of a new Room Widget
         * @return Response the form for a new Room Widget
@@ -110,13 +112,13 @@
             $csrf = $this->app['csrf_protection'];
             $fhemService = $this->app['FHEMService'];
             $rooms = $fhemService->getRooms();
-            
+
             return $this->app['twig']->render('Dashboard/Views/form.widget.room.html.twig', array(
                 'rooms' => $rooms,
                 'token' => $csrf->getCSRFTokenForForm()
             ));
         }
-        
+
         /**
          * Saves the in the form provided information for a new room widget
          * @param Request $request
@@ -126,14 +128,18 @@
             $response = new Response();
             $response->setStatusCode(500);
             if (($csrf->validateCSRFToken($request))) {
-                $room = json_decode($request->get('room'));
-                // TODO: embedd success or error message
-                $serviceDashboard = $this->app['DashboardService'];
+              // TODO: embedd success or error message
+              $serviceDashboard = $this->app['DashboardService'];
+              $roomWidget = $serviceDashboard->getWidgetRoomFromJSON($request->get('room'));
+              $em = $this->app['orm.em'];
+              $em->persist($roomWidget);
+              $em->flush();
+              $response->setStatusCode(200);
             }
-            
+
             return $response;
         }
-        
+
         /**
          * Deletes the widget with the given id
          * @param type $id the widget id
@@ -156,7 +162,7 @@
             }
             return $response;
         }
-        
+
         /**
          * Moves the widget with the given $id in the given $direction
          * @param type $id the widget id
@@ -167,23 +173,23 @@
             $serviceDashboard = $this->app['DashboardService'];
             $response = new Response();
             $ret = false;
-            
+
             if($direction == 'right') {
                 $ret = $serviceDashboard->moveWidgetRight($id);
             }
-            
-            if($direction == 'left') {                
+
+            if($direction == 'left') {
                 $ret = $serviceDashboard->moveWidgetLeft($id);
             }
-            
+
             if($ret) {
                 $response->setStatusCode(200);
             } else {
                 $this->app['session']->getFlashBag()->add('danger', 'dashboard.widget.move.error');
                 $response->setStatusCode(500);
             }
-            
+
             return $response;
         }
-    }	
+    }
 ?>

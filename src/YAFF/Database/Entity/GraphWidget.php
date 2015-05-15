@@ -4,21 +4,21 @@ namespace YAFF\Database\Entity;
 
 /**
  * @Table(name="yaff_dashboard_widgets_graph_data")
- * @Entity(repositoryClass="YAFF\Database\Repository\GraphWidgetRepository")
+ * @Entity(repositoryClass="YAFF\Database\Repository\WidgetRepository")
  */
 class GraphWidget extends Widget{
-   
-   /** 
+
+   /**
     * @Column(type="string", length=255)
     */
    private $device;
-   
-   /** 
+
+   /**
     * @Column(type="string", length=255)
     */
    private $reading;
-   
-   /** 
+
+   /**
     * @Column(type="integer")
     */
    private $interval;
@@ -30,7 +30,7 @@ class GraphWidget extends Widget{
     function getReading() {
         return $this->reading;
     }
-    
+
     function getInterval() {
         return $this->interval;
     }
@@ -46,7 +46,7 @@ class GraphWidget extends Widget{
     function setInterval($interval) {
         $this->interval = $interval;
     }
-    
+
     function getType() {
         return 1;
     }

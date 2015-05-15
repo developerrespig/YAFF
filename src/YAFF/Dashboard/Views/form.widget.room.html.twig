@@ -21,7 +21,7 @@
                     <ul id="devices" class="list-group">
                       <li class="list-group-item">Cras justo odio</li>
                     </ul>
-                  </div>               
+                  </div>
             </div>
         </div>
     </div>
@@ -33,31 +33,34 @@
 </form>
 <script>
     yaff.dashboard.rooms = JSON.parse('{{ rooms|json_encode|raw }}');
-    
+
     yaff.dashboard.showRoomDevices = function() {
         var devices = yaff.dashboard.rooms[$('#room').val()].devices;
-        
+
         var devicesHtml = "";
         for(var device in devices) {
             devicesHtml += '<li class="list-group-item">' + devices[device] + '</li>'
         }
-        
+
         $('#devices').html(devicesHtml);
     };
-    
+
     yaff.dashboard.saveWidgetRoom = function(id) {
         var url = "{{ path('yaff.dashboard.save.widget.room', {'id': 'placeholder'}) }}";
         url = url.replace('placeholder', id);
         var room = yaff.dashboard.rooms[$('#room').val()];
-        
-        $.post(url, {room: JSON.stringify(room)}, function(data) {
+        var token = $('[name=_csrf_token]').val();
+
+        $.post(url, {room: JSON.stringify(room), _csrf_token: token}, function(data) {
             yaff.util.log("Response from saving Room request: " + data);
+
+            return true;
         });
-        
+
         return true;
     }
-    
+
     yaff.dashboard.showRoomDevices();
-    
+
     $('#room').change(yaff.dashboard.showRoomDevices);
 </script>
