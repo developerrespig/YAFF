@@ -39,7 +39,7 @@
 
         var devicesHtml = "";
         for(var device in devices) {
-            devicesHtml += '<li class="list-group-item">' + devices[device] + '</li>'
+            devicesHtml += '<li class="list-group-item">' + devices[device].name + '(' + devices[device].type + ')</li>'
         }
 
         $('#devices').html(devicesHtml);

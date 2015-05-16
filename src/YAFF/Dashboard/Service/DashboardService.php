@@ -83,7 +83,8 @@ class DashboardService
 
       for ($i=0; $i < sizeof($room->devices); $i++) {
           $device = new Device();
-          $device->setName($room->devices[$i]);
+          $device->setName($room->devices[$i]->name);
+          $device->setDeviceType($room->devices[$i]->type);
           $device->setRoom($roomWidget);
           $roomWidget->getDevices()->add($device);
       }
@@ -143,5 +144,21 @@ class DashboardService
             }
         }
         return false;
+    }
+
+    /**
+     * Fetches evey configured widget from the database independently of its type
+     * @return array the widgets
+     */
+    public function getAllWidgets()
+    {
+      $widgetTypes = unserialize(WIDGETS);
+      $widgets = array();
+      foreach ($widgetTypes as $widgetType) {
+        $foundWidgets = $this->em->getRepository($widgetType['repository'])->findAll();
+        $widgets = array_merge($widgets, $foundWidgets);
+      }
+
+      return $widgets;
     }
 }

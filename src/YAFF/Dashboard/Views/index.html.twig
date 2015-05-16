@@ -61,6 +61,23 @@
                                                 {% if widgets[counter].type == 1 %}
                                                     <div class="yaff-widget-graph" data-yaff-widget-device="{{ widgets[counter].device}}" data-yaff-widget-reading="{{ widgets[counter].reading}}" data-yaff-widget-interval="{{ widgets[counter].interval}}" style="height: 200px"><img src="{{ app.request.basepath }}/resources/images/ajax-loader.gif" /></div>
                                                 {% endif %}
+                                                {% if widgets[counter].type == 2 %}
+                                                    {% for device in widgets[counter].devices %}
+                                                      {% if device.getDeviceType() == 'thermostat' %}
+                                                        {{ device.name }} {{ device.getDeviceType() }}
+                                                      {% endif %}
+                                                    {% endfor %}
+                                                    {% set firstSwitch = false %}
+                                                    {% for device in widgets[counter].devices %}
+                                                      {% if device.getDeviceType() == 'powerMeter' %}
+                                                        {% if firstSwitch == false %}
+                                                          <hr>
+                                                          {% set firstSwitch = true %}
+                                                        {% endif %}
+                                                        {{ device.name }} {{ device.getDeviceType() }}
+                                                      {% endif %}
+                                                    {% endfor %}
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </div>

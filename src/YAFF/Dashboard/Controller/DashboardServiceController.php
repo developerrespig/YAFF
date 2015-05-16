@@ -35,8 +35,8 @@
             $generalConfigService = $this->app['GeneralConfigurationService'];
             $generalConfig = $generalConfigService->getConfig();
 
-            $em = $this->app['orm.em'];
-            $widgets = $em->getRepository("\YAFF\Database\Entity\GraphWidget")->findAll();
+            $serviceDashboard = $this->app['DashboardService'];
+            $widgets = $serviceDashboard->getAllWidgets();
 
             return $this->app['twig']->render('Dashboard/Views/index.html.twig', array(
                 'config' => $generalConfig,
@@ -119,6 +119,7 @@
             ));
         }
 
+        // TODO: PHPDOC
         /**
          * Saves the in the form provided information for a new room widget
          * @param Request $request

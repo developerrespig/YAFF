@@ -19,6 +19,11 @@ class Device {
    */
    private $name;
 
+   /**
+    * @Column(type="string", length=255)
+    */
+   private $deviceType;
+
   /**
    * @ManyToOne(targetEntity="RoomWidget", inversedBy="devices")
    */
@@ -37,6 +42,16 @@ class Device {
     public function setName($name)
     {
       $this->name = $name;
+    }
+
+    public function getDeviceType()
+    {
+      return $this->deviceType;
+    }
+
+    public function setDeviceType($deviceType)
+    {
+      $this->deviceType = $deviceType;
     }
 }
 ?>
