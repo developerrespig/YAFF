@@ -74,7 +74,16 @@
                                                           <hr>
                                                           {% set firstSwitch = true %}
                                                         {% endif %}
-                                                        {{ device.name }} {{ device.getDeviceType() }}
+                                                        <div class="row">
+                                                          <div class="col-md-5 col-md-offset-1">
+                                                            {{ device.name }}
+                                                          </div>
+                                                          <div class="col-md-5 col-md-offset-1">
+                                                            <span name="switch_tooltip" id="{{ device.name }}_tooltip" data-toggle="tooltip" data-placement="top" data-trigger="manual" data-delay='{ "show": 500, "hide": 100 }' title="">
+                                                              <input type="checkbox" id="{{ device.name }}" name="switch" data-inverse="true" data-size="mini" checked>
+                                                            </span>
+                                                          </div>
+                                                        </div>
                                                       {% endif %}
                                                     {% endfor %}
                                                 {% endif %}
@@ -329,8 +338,59 @@
                     location.reload();
                     yaff.util.log("Error: " + data);
                 });
+            },
+
+            /**
+             * Fetches the state of every switch in the dashboard and toggles its state if needed
+             */
+            getSwitchState: function() {
+              var switches = $("[name='switch']");
+              var requestFunc = function(url, switchDevice) {
+                $.get(url, function(data) {
+                  if(data == "off") {
+                    $(switchDevice).bootstrapSwitch('toggleState', true);
+                  }
+                });
+              }
+
+              for (var i = 0; i < switches.length; i++) {
+                var url = "{{ path('yaff.fhem.getDeviceState', {device: 'placeholder'}) }}";
+                url = url.replace('placeholder', $(switches[i]).attr('id'));
+
+                requestFunc(url, switches[i]);
+              }
+            },
+
+            /**
+             * Toggles the actual state of the switch.
+             * @param String device the device name
+             */
+            toggleSwitch: function(device) {
+              var url = "{{ path('yaff.fhem.switch.toggle', {device: 'placeholder'}) }}";
+              url = url.replace('placeholder', device);
+
+              $.get(url, function() {
+                var tooltip = '#' + device + '_tooltip';
+                $(tooltip).prop('title', "State toggled successfully").tooltip().tooltip('show');
+                yaff.util.log('Switched state successful');
+                setTimeout(function() {
+                  $(tooltip).tooltip('hide');
+                }, 2000);
+              });
             }
         }
-        $(document).ready(yaff.dashboard.createWidgetGraphs);
+
+        /**
+         * This function executes tasks which have to be run after the DOM has been successfully loaded.
+         */
+        $(document).ready(function() {
+          var switches = $("[name='switch']");
+          switches.bootstrapSwitch();
+          switches.on('switchChange.bootstrapSwitch', function(event, state) {
+            yaff.dashboard.toggleSwitch($(this).attr('id'));
+          });
+          yaff.dashboard.getSwitchState();
+          yaff.dashboard.createWidgetGraphs();
+        });
     </script>
 {% endblock %}

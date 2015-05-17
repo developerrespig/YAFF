@@ -46,7 +46,7 @@ class FHEMService
     public function getUrl($command) {
         $config = $this->getFHEMConfig();
         if($config) {
-            $url = "http://" . $config->getHost() . ":" . $config->getPort() . "/fhem?cmd=" . $command . "&XHR=1";
+            $url = "http://" . $config->getHost() . ":" . $config->getPort() . "/fhem?cmd=" . urlencode($command) . "&XHR=1";
         } else {
             $url = null;
         }
@@ -119,32 +119,48 @@ class FHEMService
     }
 
     /**
-     * Toggles the state of the provided Switch
-     * @param type $switch
-     * @return boolean
+     * Gets the information for a single device from Fhem
+     * @param String $deviceName
+     * @return String json
      */
-    public function toggleSwitch($switch) {
-        $commando = "set " . $switch . " off";
-        $url = $this->getUrl($commando);
-        $response = $this->createRequest($url);
-        if($response->getStatusCode() == 200) {
-            return true;
-        } else {
-            return false;
-        }
+    public function getDevice($deviceName)
+    {
+      $command = "jsonlist2 " . $deviceName;
+      $url = $this->getUrl($command);
+      $response = $this->createRequest($url);
+      return $response->getContent();
     }
 
     /**
-     * Gets the information for a single device from Fhem
-     * @param String $device
-     * @return String json
+     * Gets the actual state for the given device
+     * @param String deviceName
+     * @return String state
      */
-    public function getDeviceAction($device) {
-        $command = "jsonlist2 " . $device;
-        $url = $this->getUrl($command);
-        $response = $this->createRequest($url);
+    public function getDeviceStatus($deviceName)
+    {
+      $device = json_decode($this->getDevice($deviceName))->{'Results'};
+      return $device[0]->Internals->STATE;
+    }
 
-        return $response;
+    /**
+     * Toggles the state of the provided Switch
+     * @param String $switchName
+     * @return boolean
+     */
+    public function toggleSwitch($switchName) {
+      $onOrOff = 'off';
+      if ($this->getDeviceStatus($switchName) == 'off') {
+        $onOrOff = 'on';
+      }
+
+      $commando = "set " . $switchName . " " . $onOrOff;
+      $url = $this->getUrl($commando);
+      $response = $this->createRequest($url);
+      if($response->getStatusCode() == 200) {
+          return true;
+      } else {
+          return false;
+      }
     }
 
     // TODO: Refactoring
