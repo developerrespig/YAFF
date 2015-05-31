@@ -65,5 +65,15 @@
 
           return $response;
         }
+
+        public function setDesiredTempAction($temp, $device) {
+          $command = "set " . $device . " desired-temp " . $temp;
+          $url = $this->service->getUrl($command);
+          $response = $this->service->createRequest($url);
+          $response->headers->set('Content-Type', 'text/html; charset=UTF-8');
+          $response->setContent("OK");
+
+          return $response;
+        }
     }
 ?>

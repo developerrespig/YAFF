@@ -64,7 +64,23 @@
                                                 {% if widgets[counter].type == 2 %}
                                                     {% for device in widgets[counter].devices %}
                                                       {% if device.getDeviceType() == 'thermostat' %}
-                                                        {{ device.name }} {{ device.getDeviceType() }}
+                                                        <div class="row">
+                                                          <div class="col-xs-5 col-xs-offset-1">
+                                                            <span name="radiator">{{ device.name }}</span>
+                                                          </div>
+                                                          <div class="col-xs-6">
+                                                            <div class="input-group input-group-sm">
+                                                              <input style="text-align: center;" class="form-control" type="text" id="{{ device.name }}-input" placeholder="Loading" id="desired-temp" disabled>
+                                                              <span class="input-group-btn">
+                                                                <button class="btn btn-default" type="button" onclick="yaff.dashboard.increaseTemp('{{ device.name }}')">+</button>
+                                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span id="{{ device.name }}-mode-name">Loading</span> <span class="caret"></span></button>
+                                                                <ul class="dropdown-menu" id="{{ device.name }}-mode-dropdown" role="menu">
+                                                                </ul>
+                                                                <button class="btn btn-default" type="button" onclick="yaff.dashboard.decreaseTemp('{{ device.name }}')">-</button>
+                                                              </span>
+                                                            </div>
+                                                          </div>
+                                                        </div>
                                                       {% endif %}
                                                     {% endfor %}
                                                     {% set firstSwitch = false %}
@@ -75,10 +91,10 @@
                                                           {% set firstSwitch = true %}
                                                         {% endif %}
                                                         <div class="row">
-                                                          <div class="col-md-5 col-md-offset-1">
+                                                          <div class="col-xs-5 col-xs-offset-1">
                                                             {{ device.name }}
                                                           </div>
-                                                          <div class="col-md-5 col-md-offset-1">
+                                                          <div class="col-xs-5 col-xs-offset-1">
                                                             <span name="switch_tooltip" id="{{ device.name }}_tooltip" data-toggle="tooltip" data-placement="top" data-trigger="manual" data-delay='{ "show": 500, "hide": 100 }' title="">
                                                               <input type="checkbox" id="{{ device.name }}" name="switch" data-inverse="true" data-size="mini" checked>
                                                             </span>
@@ -111,6 +127,11 @@
     {{ parent() }}
     <script>
         yaff.dashboard = {
+            dropdownInitialized: false,
+            switchStateHandle: null,
+            radiatorStatsHandle: null,
+            setNewTempHanlde: null,
+
             /**
              * Builds the url for the "create a widget" dialog and calls the request method
              */
@@ -346,9 +367,13 @@
             getSwitchState: function() {
               var switches = $("[name='switch']");
               var requestFunc = function(url, switchDevice) {
+                $(switchDevice).bootstrapSwitch('toggleDisabled');
                 $.get(url, function(data) {
+                  $(switchDevice).bootstrapSwitch('toggleDisabled');
                   if(data == "off") {
-                    $(switchDevice).bootstrapSwitch('toggleState', true);
+                    $(switchDevice).bootstrapSwitch('state', false, true);
+                  } else {
+                    $(switchDevice).bootstrapSwitch('state', true, true);
                   }
                 });
               }
@@ -359,6 +384,8 @@
 
                 requestFunc(url, switches[i]);
               }
+
+              yaff.dashboard.switchStateHandle = setTimeout(yaff.dashboard.getSwitchState, 30000);
             },
 
             /**
@@ -366,6 +393,8 @@
              * @param String device the device name
              */
             toggleSwitch: function(device) {
+              clearTimeout(yaff.dashboard.switchStateHandle);
+
               var url = "{{ path('yaff.fhem.switch.toggle', {device: 'placeholder'}) }}";
               url = url.replace('placeholder', device);
 
@@ -377,6 +406,113 @@
                   $(tooltip).tooltip('hide');
                 }, 2000);
               });
+
+              yaff.dashboard.switchStateHandle = setTimeout(yaff.dashboard.getSwitchState, 30000);
+            },
+
+            /**
+             * Gets currently desiredTemp and Mode for all radiators
+             */
+            getRadiatorStats: function() {
+              var count = $("[name='radiator']").length;
+              $("[name='radiator']").each(function(idx, obj) {
+                var device = $(obj).html();
+                var url = "{{ path('yaff.fhem.getDevice', {device: 'placeholder'}) }}";
+                url = url.replace('placeholder', device);
+
+                var requestFunc = function(url, device, init) {
+                  $.get(url, function(data) {
+                    var inputId = '#' + device + '-input';
+                    data = JSON.parse(data);
+                    var result = data.Results[0];
+                    if(!init) {
+                      var possibleSets = result.PossibleSets.split(' ');
+                      var possibleTemps = result.PossibleSets.split(' ')[2].split(',');
+                      possibleTemps[0] = possibleTemps[0].split(':')[1];
+                      possibleTemps.push(possibleTemps[0]);
+                      possibleTemps.splice(0, 1);
+                      $(inputId).data('possible-temperatures', possibleTemps.toString());
+                      var modesArray = possibleSets[3].split(',');
+                      modesArray[0] = modesArray[0].split(':')[1];
+                      $.each(modesArray, function(idx, value) {
+                        $('#' + device + '-mode-dropdown').append('<li><a href="#">' + value + '</a></li>');
+                      });
+                    }
+                    if(result.Readings.state.Value.indexOf("set") != -1) {
+                      $(inputId).attr('placeholder', 'Setting');
+                      $(inputId).val("");
+                    } else {
+                      var desiredTemp = result.Readings['desired-temp'].Value;
+                      $(inputId).val(desiredTemp);
+                      var currentMode = result.Readings['controlMode'].Value;
+                      $('#' + device + '-mode-name').html(currentMode);
+                    }
+                  });
+                };
+
+                requestFunc(url, device, yaff.dashboard.dropdownInitialized);
+
+                if(count - 1 == idx) {
+                  yaff.dashboard.dropdownInitialized = true;
+                }
+              });
+
+              yaff.dashboard.radiatorStatsHandle = setTimeout(yaff.dashboard.getRadiatorStats, 30000);
+            },
+
+            /**
+             * Increases the desired temp of the given device
+             */
+            increaseTemp: function(device) {
+              if(yaff.dashboard.setNewTempHandle != null) {
+                clearTimeout(yaff.dashboard.setNewTempHandle);
+              }
+              clearTimeout(yaff.dashboard.radiatorStatsHandle);
+              var input = $('#' + device + '-input');
+              var possibleTemps = input.data('possibleTemperatures').split(',');
+              var curIdx = possibleTemps.indexOf(input.val());
+              if(curIdx != -1 && curIdx < possibleTemps.length-1) {
+                curIdx++;
+                input.val(possibleTemps[curIdx]);
+              }
+
+              yaff.dashboard.setNewTempHandle = setTimeout(function() {
+                yaff.dashboard.setNewTemp(device);
+              }, 3000);
+            },
+
+            /**
+             * Decreases the desired temp of the given device
+             */
+            decreaseTemp: function(device) {
+              if(yaff.dashboard.setNewTempHandle != null) {
+                clearTimeout(yaff.dashboard.setNewTempHandle);
+              }
+              clearTimeout(yaff.dashboard.radiatorStatsHandle);
+              var input = $('#' + device + '-input');
+              var possibleTemps = input.data('possibleTemperatures').split(',');
+              var curIdx = possibleTemps.indexOf(input.val());
+              if(curIdx != -1 && curIdx > 0) {
+                curIdx--;
+                input.val(possibleTemps[curIdx]);
+              }
+
+              yaff.dashboard.setNewTempHandle = setTimeout(function() {
+                yaff.dashboard.setNewTemp(device);
+              }, 3000);
+            },
+
+            setNewTemp: function(device) {
+              var input = $('#' + device + '-input');
+              var url = "{{ path('yaff.fhem.radiator.set.desiredTemp', {device: 'placeholderDevice', temp: 'placeholderTemp'}) }}";
+              url = url.replace('placeholderDevice', device).replace('placeholderTemp', input.val());
+              input.attr('placeholder', 'Setting');
+              input.val("");
+
+              $.get(url, function() {
+                yaff.util.log("Value set successful");
+                yaff.dashboard.radiatorStatsHandle = setTimeout(yaff.dashboard.getRadiatorStats, 60000);
+              })
             }
         }
 
@@ -390,6 +526,7 @@
             yaff.dashboard.toggleSwitch($(this).attr('id'));
           });
           yaff.dashboard.getSwitchState();
+          yaff.dashboard.getRadiatorStats();
           yaff.dashboard.createWidgetGraphs();
         });
     </script>
