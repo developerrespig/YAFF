@@ -72,11 +72,11 @@
                                                             <div class="input-group input-group-sm">
                                                               <input style="text-align: center;" class="form-control" type="text" id="{{ device.name }}-input" placeholder="Loading" id="desired-temp" disabled>
                                                               <span class="input-group-btn">
-                                                                <button class="btn btn-default" type="button" onclick="yaff.dashboard.increaseTemp('{{ device.name }}')">+</button>
-                                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span id="{{ device.name }}-mode-name">Loading</span> <span class="caret"></span></button>
+                                                                <button class="btn btn-default" type="button" id="{{ device.name }}-increase" onclick="yaff.dashboard.increaseTemp('{{ device.name }}')">+</button>
+                                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="{{ device.name }}-dropdown" aria-expanded="false"><span id="{{ device.name }}-mode-name">Loading</span> <span class="caret"></span></button>
                                                                 <ul class="dropdown-menu" id="{{ device.name }}-mode-dropdown" role="menu">
                                                                 </ul>
-                                                                <button class="btn btn-default" type="button" onclick="yaff.dashboard.decreaseTemp('{{ device.name }}')">-</button>
+                                                                <button class="btn btn-default" type="button" id="{{ device.name }}-decrease" onclick="yaff.dashboard.decreaseTemp('{{ device.name }}')">-</button>
                                                               </span>
                                                             </div>
                                                           </div>
@@ -435,18 +435,17 @@
                       var modesArray = possibleSets[3].split(',');
                       modesArray[0] = modesArray[0].split(':')[1];
                       $.each(modesArray, function(idx, value) {
-                        $('#' + device + '-mode-dropdown').append('<li><a href="#">' + value + '</a></li>');
+                        $('#' + device + '-mode-dropdown').append('<li><a onclick="yaff.dashboard.setNewMode(\'' + device + '\', \'' + value + '\')" href="#">' + value + '</a></li>');
                       });
                     }
                     if(result.Readings.state.Value.indexOf("set") != -1) {
-                      $(inputId).attr('placeholder', 'Setting');
-                      $(inputId).val("");
-                      $('#' + device + '-mode-name').html("Setting");
+                      yaff.dashboard.setDisableRadiatorButtons(device, true);
                     } else {
                       var desiredTemp = result.Readings['desired-temp'].Value;
                       $(inputId).val(desiredTemp);
                       var currentMode = result.Readings['controlMode'].Value;
                       $('#' + device + '-mode-name').html(currentMode);
+                      yaff.dashboard.setDisableRadiatorButtons(device, false);
                     }
                   });
                 };
@@ -504,16 +503,40 @@
             },
 
             setNewTemp: function(device) {
+              yaff.dashboard.setDisableRadiatorButtons(device, true);
               var input = $('#' + device + '-input');
               var url = "{{ path('yaff.fhem.radiator.set.desiredTemp', {device: 'placeholderDevice', temp: 'placeholderTemp'}) }}";
               url = url.replace('placeholderDevice', device).replace('placeholderTemp', input.val());
-              input.attr('placeholder', 'Setting');
-              input.val("");
 
               $.get(url, function() {
                 yaff.util.log("Value set successful");
                 yaff.dashboard.radiatorStatsHandle = setTimeout(yaff.dashboard.getRadiatorStats, 60000);
               })
+            },
+
+            setNewMode: function(device, mode) {
+              yaff.dashboard.setDisableRadiatorButtons(device, true);
+              var input = $('#' + device + '-input');
+              var url = "{{ path('yaff.fhem.radiator.set.mode', {device: 'placeholderDevice', mode: 'placeholderMode'}) }}";
+              url = url.replace('placeholderDevice', device).replace('placeholderMode', mode);
+
+              $.get(url, function() {
+                yaff.util.log("Value set successful");
+                yaff.dashboard.radiatorStatsHandle = setTimeout(yaff.dashboard.getRadiatorStats, 60000);
+              })
+            },
+
+            setDisableRadiatorButtons: function(device, state) {
+              $('#' + device + '-dropdown').prop('disabled', state);
+              $('#' + device + '-increase').prop('disabled', state);
+              $('#' + device + '-decrease').prop('disabled', state);
+
+              if(state) {
+                var input = $('#' + device + '-input');
+                input.attr('placeholder', 'Setting');
+                input.val("");
+                $('#' + device + '-mode-name').html("Setting");
+              }
             }
         }
 
