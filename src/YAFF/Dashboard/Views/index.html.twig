@@ -25,7 +25,7 @@
 
     <div class="container-fluid">
         <div class="row" id="yaff-dashboard-content" data-column-count="{{ config.columns }}" data-max-widget-count="{{ config.rows * config.columns }}">
-            <div class="col-sm-10 col-sm-offset-1">
+            <div class="col-md-10 col-md-offset-1">
                 <div class="row" id="dashboard-menu-bar" style="display: none;">
                     <div class="btn-group">
                     <button type="button" id="yaff-dashboard-create-widget" class="btn btn-default" onclick="yaff.dashboard.modalCreateWidget()" data-toggle="modal" data-target="#newWidgetModal"><span class="glyphicon glyphicon-plus"></span> {{ 'dashboard.modal.add'|trans }}</button>
@@ -38,7 +38,7 @@
                         <div class="row">
                             {% for j in 1..config.columns %}
                                 {% if widgets[counter] is defined %}
-                                    <div class="col-sm-{{ 12 / config.columns }} yaff-widget" data-yaff-widget-index="{{ counter }}">
+                                    <div class="col-md-{{ 12 / config.columns }} yaff-widget" data-yaff-widget-index="{{ counter }}">
                                         <div class="panel panel-primary">
                                             <div class="panel-heading">
                                                 {{ widgets[counter].title }}
@@ -115,7 +115,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-10 col-sm-offset-1">
+            <div class="col-md-10 col-md-offset-1">
                 <a href="#" id="button-toggle-edit" onclick="return yaff.dashboard.switchEditMode()">{{ 'dashboard.edit.mode.off'|trans }}</a>
             </div>
         </div>

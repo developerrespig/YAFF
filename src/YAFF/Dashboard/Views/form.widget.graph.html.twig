@@ -7,15 +7,15 @@
             </div>
             <div class="col-md-11">
                 <div class="form-group">
-                    <label for="inputTitle" class="col-sm-4 control-label">{{ 'dashboard.create.widget.graph.title'|trans }} *</label>
+                    <label for="inputTitle" class="col-md-4 control-label">{{ 'dashboard.create.widget.graph.title'|trans }} *</label>
 
-                    <div class="col-sm-8">
+                    <div class="col-md-8">
                         <input type="text" class="form-control" name="title" {% if widget is not null %} value="{{ widget.title }}" {% endif %} required>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputDevice" class="col-sm-4 control-label">{{ 'dashboard.create.widget.graph.device'|trans }}</label>
-                    <div class="col-sm-8">
+                    <label for="inputDevice" class="col-md-4 control-label">{{ 'dashboard.create.widget.graph.device'|trans }}</label>
+                    <div class="col-md-8">
                         <select id="device" name="device">
                             {% for device in devices %}
                                 <option value="{{ attribute(device, 'Name') }}" {% if widget is not null and widget.device == attribute(device, 'Name') %} selected {% endif %}>{{ attribute(device, 'Name') }}</option>
@@ -24,17 +24,17 @@
                     </div>                        
                 </div>
                 <div class="form-group">
-                    <label for="inputReadings" class="col-sm-4 control-label">{{ 'dashboard.create.widget.graph.readings'|trans }}</label>
-                    <div class="col-sm-8">
+                    <label for="inputReadings" class="col-md-4 control-label">{{ 'dashboard.create.widget.graph.readings'|trans }}</label>
+                    <div class="col-md-8">
                         <select id="reading" name="reading">
                         </select>
                     </div>
                 </div>
-                <div class="col-sm-4"></div>
-                <div id="value" class="col-sm-8"></div>
+                <div class="col-md-4"></div>
+                <div id="value" class="col-md-8"></div>
                 <div class="form-group">
-                    <label for="inputReadings" class="col-sm-4 control-label">{{ 'dashboard.create.widget.graph.intervall'|trans }}</label>
-                    <div class="col-sm-8">
+                    <label for="inputReadings" class="col-md-4 control-label">{{ 'dashboard.create.widget.graph.intervall'|trans }}</label>
+                    <div class="col-md-8">
                         <select name="interval">
                             <option value="{{ 3600*12 }}" {% if widget is not null and widget.interval == 3600*12 %} selected {% endif %}>12 {{ 'hours'|trans }}</option>
                             <option value="{{ 3600*24 }}" {% if widget is not null and widget.interval == 3600*24 %} selected {% endif %}>24 {{ 'hours'|trans }}</option>
