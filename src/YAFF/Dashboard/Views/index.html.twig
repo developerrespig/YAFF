@@ -441,6 +441,7 @@
                     if(result.Readings.state.Value.indexOf("set") != -1) {
                       $(inputId).attr('placeholder', 'Setting');
                       $(inputId).val("");
+                      $('#' + device + '-mode-name').html("Setting");
                     } else {
                       var desiredTemp = result.Readings['desired-temp'].Value;
                       $(inputId).val(desiredTemp);
