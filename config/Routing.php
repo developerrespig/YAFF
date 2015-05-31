@@ -98,4 +98,6 @@
         ->bind('yaff.fhem.getDeviceState');
     $app->get('/fhem/switch/toggle/{device}', "yaff.fhem.service:switchToggleAction")
         ->bind('yaff.fhem.switch.toggle');
+    $app->get('/fhem/radiator/set/desired-temp/{device}/{temp}', "yaff.fhem.service:setDesiredTempAction")
+        ->bind('yaff.fhem.radiator.set.desiredTemp');
 ?>
