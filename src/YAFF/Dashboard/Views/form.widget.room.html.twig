@@ -1,0 +1,66 @@
+<form id="create-widget-graph" class="form-horizontal" role="form" onsubmit="return yaff.dashboard.saveWidgetRoom(-1)">
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row" id="flash-message-overlay">
+                <div class="row">
+                </div>
+            </div>
+            <div class="col-md-11">
+                <div class="form-group">
+                    <label for="inputReadings" class="col-md-4 control-label">{{ 'dashboard.create.widget.room.room'|trans }}</label>
+                    <div class="col-md-8">
+                        <select id="room">
+                            {% for room in rooms %}
+                                <option value="{{ room.name }}">{{ room.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">{{ 'dashboard.create.widget.room.devices'|trans }}</div>
+                    <ul id="devices" class="list-group">
+                      <li class="list-group-item">Cras justo odio</li>
+                    </ul>
+                  </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'button.cancel'|trans }}</button>
+        <input type="submit" value="{{ 'button.save'|trans }}" class="btn btn-primary"/>
+        <input name="_csrf_token" value="{{ token }}" type="hidden">
+    </div>
+</form>
+<script>
+    yaff.dashboard.rooms = JSON.parse('{{ rooms|json_encode|raw }}');
+
+    yaff.dashboard.showRoomDevices = function() {
+        var devices = yaff.dashboard.rooms[$('#room').val()].devices;
+
+        var devicesHtml = "";
+        for(var device in devices) {
+            devicesHtml += '<li class="list-group-item">' + devices[device].name + '(' + devices[device].type + ')</li>'
+        }
+
+        $('#devices').html(devicesHtml);
+    };
+
+    yaff.dashboard.saveWidgetRoom = function(id) {
+        var url = "{{ path('yaff.dashboard.save.widget.room', {'id': 'placeholder'}) }}";
+        url = url.replace('placeholder', id);
+        var room = yaff.dashboard.rooms[$('#room').val()];
+        var token = $('[name=_csrf_token]').val();
+
+        $.post(url, {room: JSON.stringify(room), _csrf_token: token}, function(data) {
+            yaff.util.log("Response from saving Room request: " + data);
+
+            location.reload();
+        });
+
+        return false;
+    }
+
+    yaff.dashboard.showRoomDevices();
+
+    $('#room').change(yaff.dashboard.showRoomDevices);
+</script>

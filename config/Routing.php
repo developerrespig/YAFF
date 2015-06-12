@@ -8,12 +8,18 @@
 
     $app->get('/', "yaff.dashboard:indexAction")
         ->bind('yaff.dashboard');
+    $app->get('/create/widget', "yaff.dashboard:showFormWidgetCreateAction")
+        ->bind('yaff.dashboard.create.widget');
     $app->get('/create/widget/graph', "yaff.dashboard:showFormWidgetGraphAction")
         ->bind('yaff.dashboard.create.widget.graph');
     $app->get('/edit/widget/graph/{id}', "yaff.dashboard:showFormWidgetGraphAction")
         ->bind('yaff.dashboard.edit.widget.graph');
     $app->post('/save/widget/graph/{id}', "yaff.dashboard:saveWidgetGraphAction")
         ->bind('yaff.dashboard.save.widget.graph');
+    $app->get('/create/widget/room', "yaff.dashboard:showFormWidgetRoomAction")
+        ->bind('yaff.dashboard.create.widget.room');
+    $app->post('/save/widget/room/{id}', "yaff.dashboard:saveWidgetRoomAction")
+        ->bind('yaff.dashboard.save.widget.room');
     $app->get('/delete/widget/{id}', "yaff.dashboard:deleteWidgetAction")
         ->bind('yaff.dashboard.delete.widget');
     $app->get('/move/widget/{id}/{direction}', "yaff.dashboard:moveWidgetAction")
@@ -98,4 +104,12 @@
         ->bind('yaff.fhem.getValues');
     $app->get('/fhem/get/device/{device}', "yaff.fhem.service:getDeviceAction")
         ->bind('yaff.fhem.getDevice');
+    $app->get('/fhem/get/device/state/{device}', "yaff.fhem.service:getDeviceStateAction")
+        ->bind('yaff.fhem.getDeviceState');
+    $app->get('/fhem/switch/toggle/{device}', "yaff.fhem.service:switchToggleAction")
+        ->bind('yaff.fhem.switch.toggle');
+    $app->get('/fhem/radiator/set/desired-temp/{device}/{temp}', "yaff.fhem.service:setDesiredTempAction")
+        ->bind('yaff.fhem.radiator.set.desiredTemp');
+    $app->get('/fhem/radiator/set/mode/{device}/{mode}', "yaff.fhem.service:setModeAction")
+        ->bind('yaff.fhem.radiator.set.mode');
 ?>

@@ -1,0 +1,11 @@
+<div class="modal-body">
+    <div class="container-fluid">
+        <div class="col-md-11">
+            {% for widget in widgets %}
+                <button type="button" class="btn btn-default btn-block" onclick="{{ widget.jsFunc }}()">{{ widget.translation|trans }}</button>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+</div>

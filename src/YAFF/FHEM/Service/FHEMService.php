@@ -46,7 +46,7 @@ class FHEMService
     public function getUrl($command) {
         $config = $this->getFHEMConfig();
         if($config) {
-            $url = "http://" . $config->getHost() . ":" . $config->getPort() . "/fhem?cmd=" . $command . "&XHR=1";
+            $url = "http://" . $config->getHost() . ":" . $config->getPort() . "/fhem?cmd=" . urlencode($command) . "&XHR=1";
         } else {
             $url = null;
         }
@@ -90,17 +90,25 @@ class FHEMService
             ['Content-Type' => 'application/json']
         );
     }
-    
+
+    /**
+     * Fetches all information which the command jsonlist2 from FHEM provides
+     * @return Object the device list
+     */
     public function getFHEMJsonList() {
         $url = $this->getUrl("jsonlist2");
-        $response = $this->createRequest($url);        
+        $response = $this->createRequest($url);
         if($response->getStatusCode() == 200) {
             $jsonlist = $response->getContent();
             $jsonArray = json_decode($jsonlist)->{'Results'};
         }
         return $jsonArray;
     }
-    
+
+    /**
+     * Creates an array of alle FHEM devices which may be accessed through their name
+     * @return array the FHEM devices as an array
+     */
     public function getFHEMDevices() {
         $devices = array();
         $jsonArray = $this->getFHEMJsonList();
@@ -108,6 +116,105 @@ class FHEMService
             $devices[$jsonArray[$i]->{'Name'}] = $jsonArray[$i];
         }
         return $devices;
+    }
+
+    /**
+     * Gets the information for a single device from Fhem
+     * @param String $deviceName
+     * @return String json
+     */
+    public function getDevice($deviceName)
+    {
+      $command = "jsonlist2 " . $deviceName;
+      $url = $this->getUrl($command);
+      $response = $this->createRequest($url);
+      return $response->getContent();
+    }
+
+    /**
+     * Gets the actual state for the given device
+     * @param String deviceName
+     * @return String state
+     */
+    public function getDeviceStatus($deviceName)
+    {
+      $device = json_decode($this->getDevice($deviceName))->{'Results'};
+      return $device[0]->Internals->STATE;
+    }
+
+    /**
+     * Toggles the state of the provided Switch
+     * @param String $switchName
+     * @return boolean
+     */
+    public function toggleSwitch($switchName) {
+      $onOrOff = 'off';
+      if ($this->getDeviceStatus($switchName) == 'off') {
+        $onOrOff = 'on';
+      }
+
+      $commando = "set " . $switchName . " " . $onOrOff;
+      $url = $this->getUrl($commando);
+      $response = $this->createRequest($url);
+      if($response->getStatusCode() == 200) {
+          return true;
+      } else {
+          return false;
+      }
+    }
+
+    // TODO: Refactoring
+    /**
+     * Gets all rooms with the appropriate devices from Fhem
+     * @return array the rooms
+     */
+    public function getRooms() {
+        $devices = $this->getFHEMDevices();
+        $rooms = array();
+        foreach($devices as $device) {
+            if(isset($device->Attributes)) {
+                if(isset($device->Attributes->room)) {
+                    $roomName = $device->Attributes->room;
+                    if (isset($device->Attributes->subType)) {
+                      $deviceType = $device->Attributes->subType;
+
+                      switch ($deviceType) {
+                        case 'powerMeter':
+                          $deviceName = $device->Internals->channel_01;
+                          break;
+
+                        case 'thermostat':
+                          $deviceName = $device->Internals->channel_04;
+                          break;
+
+                        default:
+                          $deviceName = $device->Name;
+                          break;
+                      }
+                      if(isset($rooms[$roomName])) {
+                          $roomDevices = $rooms[$roomName]['devices'];
+                          array_push($roomDevices, array(
+                            'name' => $deviceName,
+                            'type' => $deviceType
+                          ));
+                          $rooms[$roomName]['devices'] = $roomDevices;
+                      } else {
+                          $room = array();
+                          $room['name'] = $roomName;
+                          $roomDevices = array();
+                          array_push($roomDevices, array(
+                            'name' => $deviceName,
+                            'type' => $deviceType
+                          ));
+                          $room['devices'] = $roomDevices;
+                          $rooms[$roomName] = $room;
+                      }
+                    }
+                }
+            }
+        }
+
+        return $rooms;
     }
 }
 ?>

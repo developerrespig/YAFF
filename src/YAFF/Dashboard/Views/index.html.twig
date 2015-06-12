@@ -22,13 +22,13 @@
         </div>
         <!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    
+
     <div class="container-fluid">
         <div class="row" id="yaff-dashboard-content" data-column-count="{{ config.columns }}" data-max-widget-count="{{ config.rows * config.columns }}">
             <div class="col-md-10 col-md-offset-1">
                 <div class="row" id="dashboard-menu-bar" style="display: none;">
                     <div class="btn-group">
-                    <button type="button" id="yaff-dashboard-create-widget" class="btn btn-default" onclick="yaff.dashboard.modalCreateWidgetGraph()" data-toggle="modal" data-target="#newWidgetModal"><span class="glyphicon glyphicon-plus"></span> {{ 'dashboard.modal.add'|trans }}</button>
+                    <button type="button" id="yaff-dashboard-create-widget" class="btn btn-default" onclick="yaff.dashboard.modalCreateWidget()" data-toggle="modal" data-target="#newWidgetModal"><span class="glyphicon glyphicon-plus"></span> {{ 'dashboard.modal.add'|trans }}</button>
                     </div>
                     <hr>
                 </div>
@@ -36,10 +36,10 @@
                 {% for i in 1..config.rows %}
                     {% if widgets[counter] is defined %}
                         <div class="row">
-                            {% for j in 1..config.columns %}                                
+                            {% for j in 1..config.columns %}
                                 {% if widgets[counter] is defined %}
                                     <div class="col-md-{{ 12 / config.columns }} yaff-widget" data-yaff-widget-index="{{ counter }}">
-                                        <div class="panel panel-primary">                                
+                                        <div class="panel panel-primary">
                                             <div class="panel-heading">
                                                 {{ widgets[counter].title }}
                                                 <div class="widget-menu-bar btn-group" style="float: right; display:none;">
@@ -61,15 +61,57 @@
                                                 {% if widgets[counter].type == 1 %}
                                                     <div class="yaff-widget-graph" data-yaff-widget-device="{{ widgets[counter].device}}" data-yaff-widget-reading="{{ widgets[counter].reading}}" data-yaff-widget-interval="{{ widgets[counter].interval}}" style="height: 200px"><img src="{{ app.request.basepath }}/resources/images/ajax-loader.gif" /></div>
                                                 {% endif %}
+                                                {% if widgets[counter].type == 2 %}
+                                                    {% for device in widgets[counter].devices %}
+                                                      {% if device.getDeviceType() == 'thermostat' %}
+                                                        <div class="row">
+                                                          <div class="col-xs-5 col-xs-offset-1">
+                                                            <span name="radiator">{{ device.name }}</span>
+                                                          </div>
+                                                          <div class="col-xs-6">
+                                                            <div class="input-group input-group-sm">
+                                                              <input style="text-align: center;" class="form-control" type="text" id="{{ device.name }}-input" placeholder="Loading" id="desired-temp" disabled>
+                                                              <span class="input-group-btn">
+                                                                <button class="btn btn-default" type="button" id="{{ device.name }}-increase" onclick="yaff.dashboard.increaseTemp('{{ device.name }}')">+</button>
+                                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="{{ device.name }}-dropdown" aria-expanded="false"><span id="{{ device.name }}-mode-name">Loading</span> <span class="caret"></span></button>
+                                                                <ul class="dropdown-menu" id="{{ device.name }}-mode-dropdown" role="menu">
+                                                                </ul>
+                                                                <button class="btn btn-default" type="button" id="{{ device.name }}-decrease" onclick="yaff.dashboard.decreaseTemp('{{ device.name }}')">-</button>
+                                                              </span>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      {% endif %}
+                                                    {% endfor %}
+                                                    {% set firstSwitch = false %}
+                                                    {% for device in widgets[counter].devices %}
+                                                      {% if device.getDeviceType() == 'powerMeter' %}
+                                                        {% if firstSwitch == false %}
+                                                          <hr>
+                                                          {% set firstSwitch = true %}
+                                                        {% endif %}
+                                                        <div class="row">
+                                                          <div class="col-xs-5 col-xs-offset-1">
+                                                            {{ device.name }}
+                                                          </div>
+                                                          <div class="col-xs-5 col-xs-offset-1">
+                                                            <span name="switch_tooltip" id="{{ device.name }}_tooltip" data-toggle="tooltip" data-placement="top" data-trigger="manual" data-delay='{ "show": 500, "hide": 100 }' title="">
+                                                              <input type="checkbox" id="{{ device.name }}" name="switch" data-inverse="true" data-size="mini" checked>
+                                                            </span>
+                                                          </div>
+                                                        </div>
+                                                      {% endif %}
+                                                    {% endfor %}
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </div>
                                     {% set counter = counter + 1 %}
                                 {% endif %}
-                            {% endfor %} 
+                            {% endfor %}
                         </div>
                     {% endif %}
-                {% endfor %}  
+                {% endfor %}
             </div>
         </div>
         <div class="row">
@@ -85,33 +127,68 @@
     {{ parent() }}
     <script>
         yaff.dashboard = {
+            dropdownInitialized: false,
+            switchStateHandle: null,
+            radiatorStatsHandle: null,
+            setNewTempHanlde: null,
+
             /**
-             * Fetches the content for the create a graph widget
+             * Builds the url for the "create a widget" dialog and calls the request method
+             */
+            modalCreateWidget: function() {
+                var url = '{{ path('yaff.dashboard.create.widget') }}';
+                callback = function() {};
+                this.modalLoadWidgetForm(url, callback);
+            },
+
+            /**
+             * Builds the url for the "create a graph widget" dialog and calls the build callback method
              */
             modalCreateWidgetGraph: function() {
                 var url = '{{ path('yaff.dashboard.create.widget.graph') }}';
                 this.modalLoadWidgetGraph(url);
             },
-                    
+
             /**
-             * Fetches the content for the edit a graph widget
+             * Builds the url for the "edit a graph widget" dialog and calls the build callback method
              */
             modalEditWidgetGraph: function(id) {
                 var url = '{{ path('yaff.dashboard.edit.widget.graph', {id: 'idPlaceholder'}) }}';
                 url = url.replace('idPlaceholder', id);
                 this.modalLoadWidgetGraph(url);
             },
-                    
+
             /**
-             * Fetches the content for the modal and sets onchange event functions
+             * Builds the callback function for the "create / edit a graph widget" request and calls the request method
              */
-            modalLoadWidgetGraph: function(url) {
-                var idModal = '#modal-content-ajax';
-                yaff.util.setContentModalLoading(idModal);
-                $(idModal).load(url, function() {
+            modalLoadWidgetGraph: function(url, callback) {
+                callback = function() {
                     $('#device').change(yaff.dashboard.createOptionsReadings);
                     $('#reading').change(yaff.dashboard.getCurrentReadingValue);
                     yaff.dashboard.createOptionsReadings();
+                };
+                this.modalLoadWidgetForm(url, callback);
+            },
+
+            /**
+             * Builds the url for the "create a room widget" dialog and calls the build callback method
+             */
+            modalCreateWidgetRoom: function() {
+                var url = '{{ path('yaff.dashboard.create.widget.room') }}';
+                callback = function() {
+                    yaff.util.log("Done");
+                }
+                this.modalLoadWidgetForm(url, callback);
+            },
+
+            /**
+             * Starts the request for the passed url and calls the provided callback function when the request was successful
+             */
+            modalLoadWidgetForm: function(url, callback) {
+                var idModal = '#modal-content-ajax';
+                yaff.util.setContentModalLoading(idModal);
+                $(idModal).load(url, function() {
+                    callback();
                 });
             },
 
@@ -120,7 +197,7 @@
              * @param {array} values
              * @param {jQuery} widget
              */
-            drawWidgetGraph: function(values, widget, reading) {            
+            drawWidgetGraph: function(values, widget, reading) {
                 var chartData = [];
                 var minValue;
                 var maxValue;
@@ -175,7 +252,7 @@
                     } else {
                         $("#tooltip").hide();
                     }
-                });                
+                });
             },
 
             /**
@@ -215,7 +292,7 @@
                     }
                     buttonToggleEdit.html('{{ 'dashboard.edit.mode.off'|trans }}');
                     menubar.hide();
-                } else {                    
+                } else {
                     if($("#yaff-dashboard-content").data("max-widget-count") == $(".yaff-widget").length) {
                         if(!$("#yaff-dashboard-create-widget").prop('disabled')) {
                             $("#yaff-dashboard-create-widget").prop( "disabled", true );
@@ -229,7 +306,7 @@
                     menubar.show();
                 }
             },
-            
+
             /**
              * Starts the delete request for the widget with the passed id and reloads the page
              * @param {type} id the widget id
@@ -241,7 +318,7 @@
                     location.reload();
                 });
             },
-            
+
             /**
              * Starts the move widget request for the widget with the given id and the given direction and reloads the page
              * @param id the widget id
@@ -254,11 +331,11 @@
                 url = url.replace('placeholderId', id);
                 url = url.replace('placeholderDirection', direction);
                 $.get(url, function() {
-                    var widget = $('div[data-yaff-widget-index="' + index + '"]');                    
-                    var widgetAfter = $('div[data-yaff-widget-index="' + (index + 1) + '"]'); 
+                    var widget = $('div[data-yaff-widget-index="' + index + '"]');
+                    var widgetAfter = $('div[data-yaff-widget-index="' + (index + 1) + '"]');
                     var widgetBefore = $('div[data-yaff-widget-index="' + (index - 1) + '"]');
                     if(direction == 'left') {
-                        widget.detach().insertBefore(widgetBefore);   
+                        widget.detach().insertBefore(widgetBefore);
                         widget.attr('data-yaff-widget-index', (index - 1));
                         widgetBefore.attr('data-yaff-widget-index', index);
                     }
@@ -270,20 +347,211 @@
                             widget.detach().insertAfter(widgetAfter);
                         }
                         widget.attr('data-yaff-widget-index', (index + 1));
-                        widgetAfter.attr('data-yaff-widget-index', index);                        
+                        widgetAfter.attr('data-yaff-widget-index', index);
                     }
-                    
+
                     // reset edit menu bars at the widget
                     $('.yaff-widget-move-left').css('display', 'inline-block');
-                    $('.yaff-widget-move-right').css('display', 'inline-block');                    
+                    $('.yaff-widget-move-right').css('display', 'inline-block');
                     $($('.yaff-widget-move-left')[0]).css('display', 'none');
                     $($('.yaff-widget-move-right')[$('.yaff-widget-move-right').length-1]).css('display', 'none');
                 }).fail(function(data) {
                     location.reload();
-                    yaff.util.log("Error: " + data); 
+                    yaff.util.log("Error: " + data);
                 });
+            },
+
+            /**
+             * Fetches the state of every switch in the dashboard and toggles its state if needed
+             */
+            getSwitchState: function() {
+              var switches = $("[name='switch']");
+              var requestFunc = function(url, switchDevice) {
+                $(switchDevice).bootstrapSwitch('toggleDisabled');
+                $.get(url, function(data) {
+                  $(switchDevice).bootstrapSwitch('toggleDisabled');
+                  if(data == "off") {
+                    $(switchDevice).bootstrapSwitch('state', false, true);
+                  } else {
+                    $(switchDevice).bootstrapSwitch('state', true, true);
+                  }
+                });
+              }
+
+              for (var i = 0; i < switches.length; i++) {
+                var url = "{{ path('yaff.fhem.getDeviceState', {device: 'placeholder'}) }}";
+                url = url.replace('placeholder', $(switches[i]).attr('id'));
+
+                requestFunc(url, switches[i]);
+              }
+
+              yaff.dashboard.switchStateHandle = setTimeout(yaff.dashboard.getSwitchState, 30000);
+            },
+
+            /**
+             * Toggles the actual state of the switch.
+             * @param String device the device name
+             */
+            toggleSwitch: function(device) {
+              clearTimeout(yaff.dashboard.switchStateHandle);
+
+              var url = "{{ path('yaff.fhem.switch.toggle', {device: 'placeholder'}) }}";
+              url = url.replace('placeholder', device);
+
+              $.get(url, function() {
+                var tooltip = '#' + device + '_tooltip';
+                $(tooltip).prop('title', "State toggled successfully").tooltip().tooltip('show');
+                yaff.util.log('Switched state successful');
+                setTimeout(function() {
+                  $(tooltip).tooltip('hide');
+                }, 2000);
+              });
+
+              yaff.dashboard.switchStateHandle = setTimeout(yaff.dashboard.getSwitchState, 30000);
+            },
+
+            /**
+             * Gets currently desiredTemp and Mode for all radiators
+             */
+            getRadiatorStats: function() {
+              var count = $("[name='radiator']").length;
+              $("[name='radiator']").each(function(idx, obj) {
+                var device = $(obj).html();
+                var url = "{{ path('yaff.fhem.getDevice', {device: 'placeholder'}) }}";
+                url = url.replace('placeholder', device);
+
+                var requestFunc = function(url, device, init) {
+                  $.get(url, function(data) {
+                    var inputId = '#' + device + '-input';
+                    data = JSON.parse(data);
+                    var result = data.Results[0];
+                    if(!init) {
+                      var possibleSets = result.PossibleSets.split(' ');
+                      var possibleTemps = result.PossibleSets.split(' ')[2].split(',');
+                      possibleTemps[0] = possibleTemps[0].split(':')[1];
+                      possibleTemps.push(possibleTemps[0]);
+                      possibleTemps.splice(0, 1);
+                      $(inputId).data('possible-temperatures', possibleTemps.toString());
+                      var modesArray = possibleSets[3].split(',');
+                      modesArray[0] = modesArray[0].split(':')[1];
+                      $.each(modesArray, function(idx, value) {
+                        $('#' + device + '-mode-dropdown').append('<li><a onclick="yaff.dashboard.setNewMode(\'' + device + '\', \'' + value + '\')" href="#">' + value + '</a></li>');
+                      });
+                    }
+                    if(result.Readings.state.Value.indexOf("set") != -1) {
+                      yaff.dashboard.setDisableRadiatorButtons(device, true);
+                    } else {
+                      var desiredTemp = result.Readings['desired-temp'].Value;
+                      $(inputId).val(desiredTemp);
+                      var currentMode = result.Readings['controlMode'].Value;
+                      $('#' + device + '-mode-name').html(currentMode);
+                      yaff.dashboard.setDisableRadiatorButtons(device, false);
+                    }
+                  });
+                };
+
+                requestFunc(url, device, yaff.dashboard.dropdownInitialized);
+
+                if(count - 1 == idx) {
+                  yaff.dashboard.dropdownInitialized = true;
+                }
+              });
+
+              yaff.dashboard.radiatorStatsHandle = setTimeout(yaff.dashboard.getRadiatorStats, 30000);
+            },
+
+            /**
+             * Increases the desired temp of the given device
+             */
+            increaseTemp: function(device) {
+              if(yaff.dashboard.setNewTempHandle != null) {
+                clearTimeout(yaff.dashboard.setNewTempHandle);
+              }
+              clearTimeout(yaff.dashboard.radiatorStatsHandle);
+              var input = $('#' + device + '-input');
+              var possibleTemps = input.data('possibleTemperatures').split(',');
+              var curIdx = possibleTemps.indexOf(input.val());
+              if(curIdx != -1 && curIdx < possibleTemps.length-1) {
+                curIdx++;
+                input.val(possibleTemps[curIdx]);
+              }
+
+              yaff.dashboard.setNewTempHandle = setTimeout(function() {
+                yaff.dashboard.setNewTemp(device);
+              }, 3000);
+            },
+
+            /**
+             * Decreases the desired temp of the given device
+             */
+            decreaseTemp: function(device) {
+              if(yaff.dashboard.setNewTempHandle != null) {
+                clearTimeout(yaff.dashboard.setNewTempHandle);
+              }
+              clearTimeout(yaff.dashboard.radiatorStatsHandle);
+              var input = $('#' + device + '-input');
+              var possibleTemps = input.data('possibleTemperatures').split(',');
+              var curIdx = possibleTemps.indexOf(input.val());
+              if(curIdx != -1 && curIdx > 0) {
+                curIdx--;
+                input.val(possibleTemps[curIdx]);
+              }
+
+              yaff.dashboard.setNewTempHandle = setTimeout(function() {
+                yaff.dashboard.setNewTemp(device);
+              }, 3000);
+            },
+
+            setNewTemp: function(device) {
+              var input = $('#' + device + '-input');
+              var url = "{{ path('yaff.fhem.radiator.set.desiredTemp', {device: 'placeholderDevice', temp: 'placeholderTemp'}) }}";
+              url = url.replace('placeholderDevice', device).replace('placeholderTemp', input.val());
+              yaff.dashboard.setDisableRadiatorButtons(device, true);
+
+              $.get(url, function() {
+                yaff.util.log("Value set successful");
+                yaff.dashboard.radiatorStatsHandle = setTimeout(yaff.dashboard.getRadiatorStats, 60000);
+              })
+            },
+
+            setNewMode: function(device, mode) {
+              var input = $('#' + device + '-input');
+              var url = "{{ path('yaff.fhem.radiator.set.mode', {device: 'placeholderDevice', mode: 'placeholderMode'}) }}";
+              url = url.replace('placeholderDevice', device).replace('placeholderMode', mode);
+              yaff.dashboard.setDisableRadiatorButtons(device, true);
+
+              $.get(url, function() {
+                yaff.util.log("Value set successful");
+                yaff.dashboard.radiatorStatsHandle = setTimeout(yaff.dashboard.getRadiatorStats, 60000);
+              })
+            },
+
+            setDisableRadiatorButtons: function(device, state) {
+              $('#' + device + '-dropdown').prop('disabled', state);
+              $('#' + device + '-increase').prop('disabled', state);
+              $('#' + device + '-decrease').prop('disabled', state);
+
+              if(state) {
+                var input = $('#' + device + '-input');
+                input.attr('placeholder', 'Setting');
+                input.val("");
+                $('#' + device + '-mode-name').html("Setting");
+              }
             }
         }
-        $(document).ready(yaff.dashboard.createWidgetGraphs);
+
+        /**
+         * This function executes tasks which have to be run after the DOM has been successfully loaded.
+         */
+        $(document).ready(function() {
+          var switches = $("[name='switch']");
+          switches.bootstrapSwitch();
+          switches.on('switchChange.bootstrapSwitch', function(event, state) {
+            yaff.dashboard.toggleSwitch($(this).attr('id'));
+          });
+          yaff.dashboard.getSwitchState();
+          yaff.dashboard.getRadiatorStats();
+          yaff.dashboard.createWidgetGraphs();
+        });
     </script>
 {% endblock %}
