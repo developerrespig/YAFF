@@ -1,0 +1,96 @@
+{% extends 'Base/Views/base.html.twig' %}
+
+{% block title %}
+    {{ 'dashboard.title'|trans }}
+{% endblock %}
+
+{% block description %}
+    {{ 'dashboard.description'|trans }}
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+      <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+              <div class="row">
+                  {% for thermostat in thermostats %}
+                          <div class="col-md-6 yaff-thermostat">
+                              <div class="panel panel-primary">
+                                  <div class="panel-heading">
+                                      {{ thermostat }}
+                                  </div>
+                                  <div class="panel-body" name="thermostat" id="{{ thermostat }}">
+                                    <img src="{{ app.request.basepath }}/resources/images/ajax-loader.gif" />
+                                  </div>
+                              </div>
+                          </div>
+                  {% endfor %}
+              </div>
+          </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+      yaff.thermostats = {
+        load: function() {
+          $("[name='thermostat']").each(function(idx, obj) {
+            var url = "{{ path('yaff.fhem.getDevice', {device: 'placeholder'}) }}";
+            url = url.replace('placeholder', obj.id);
+
+            $.get(url, function(data) {
+              // TODO: Refactoring -> Codedoppelung in index.html.twig
+              data = JSON.parse(data);
+              var result = data.Results[0];
+              var possibleSets = result.PossibleSets.split(' ');
+              var possibleTemps = result.PossibleSets.split(' ')[2].split(',');
+              possibleTemps[0] = possibleTemps[0].split(':')[1];
+              possibleTemps.push(possibleTemps[0]);
+              possibleTemps.splice(0, 1);
+              var modesArray = possibleSets[3].split(',');
+              modesArray[0] = modesArray[0].split(':')[1];
+
+              var html = "";
+              var currentMode = result.Readings['controlMode'].Value;
+              var currentDeviceStatus = result.Readings.state.Value;
+
+              $.each(modesArray, function(index, value) {
+                var cssClass = 'btn-default';
+                if(currentMode == value) {
+                  cssClass = 'btn-success';
+                }
+                var disabled = '';
+                if(currentDeviceStatus.indexOf("set") != -1) {
+                  disabled = 'disabled';
+                }
+
+                html = html + '<button name="mode-button-' + obj.id + '" class="btn ' + cssClass + '" type="submit" onclick="yaff.thermostats.setNewMode(\'' + obj.id + '\', \'' + value + '\')" ' + disabled + '>' + value + '</button>';
+              });
+              html = html + '<hr>';
+              $(obj).html(html);
+            });
+          });
+          setTimeout(yaff.thermostats.load, 60000);
+        },
+
+        setNewMode: function(device, mode) {
+          var url = "{{ path('yaff.fhem.radiator.set.mode', {device: 'placeholderDevice', mode: 'placeholderMode'}) }}";
+          url = url.replace('placeholderDevice', device).replace('placeholderMode', mode);
+
+          $("[name='thermostat']").each(function(idx, obj) {
+            $(obj).prop('disabled', true);
+          });
+
+          $.get(url, function() {
+            yaff.util.log("Value set successful");
+          })
+        },
+      };
+
+      $(document).ready(function() {
+        yaff.thermostats.load();
+      });
+    </script>
+{% endblock %}

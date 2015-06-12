@@ -50,7 +50,11 @@
                 <source>days</source>
                 <target>Tage</target>
             </trans-unit>
-            
+            <trans-unit id="20">
+                <source>nav.thermostats</source>
+                <target>Heizung</target>
+            </trans-unit>
+
             <trans-unit id="10">
                 <source>button.cancel</source>
                 <target>Abbrechen</target>
@@ -75,7 +79,7 @@
                 <source>button.save</source>
                 <target>Speichern</target>
             </trans-unit>
-            
+
             <trans-unit id="16">
                 <source>flash.mandatory</source>
                 <target>Bitte alle Pflichtfelder ausfüllen.</target>

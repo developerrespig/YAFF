@@ -164,6 +164,25 @@ class FHEMService
     }
 
     // TODO: Refactoring
+    public function getThermostats() {
+      $devices = $this->getFHEMDevices();
+      $thermostats = array();
+      foreach($devices as $device) {
+          if(isset($device->Attributes)) {
+              if (isset($device->Attributes->subType)) {
+                $deviceType = $device->Attributes->subType;
+
+                if($deviceType == 'thermostat') {
+                  array_push($thermostats, $device->Internals->channel_04);
+                }
+              }
+          }
+      }
+
+      return $thermostats;
+    }
+
+    // TODO: Refactoring
     /**
      * Gets all rooms with the appropriate devices from Fhem
      * @return array the rooms
