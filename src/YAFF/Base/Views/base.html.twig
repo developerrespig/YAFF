@@ -19,18 +19,18 @@
         <script type="text/javascript" src="{{ app.request.basepath }}/resources/js/bootstrap-switch.min.js"></script>
         <script>
             var yaff = yaff || {};
-            
+
             yaff.util = {
                 setContentModalLoading: function(id) {
                     var content = '<div class="modal-body">' + this.getLoadingAnimation() + '</div>';
                     $(id).html(content);
                 },
-                        
+
                 getLoadingAnimation: function() {
                     var img = '<img src="{{ app.request.basepath }}/resources/images/ajax-loader.gif" />';
                     return img;
                 },
-                
+
                 log: function(message) {
                     console.log(message);
                 }
@@ -54,7 +54,8 @@
             </div>
             <div style="" aria-expanded="true" class="navbar-collapse navbar-inverse-collapse collapse in">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ path('yaff.dashboard') }}">{{ 'nav.dashboard'|trans }}</a></li>
+                  <li><a href="{{ path('yaff.dashboard') }}">{{ 'nav.dashboard'|trans }}</a></li>
+                  <li><a href="{{ path('yaff.thermostats') }}">{{ 'nav.thermostats'|trans }}</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if is_granted('ROLE_ADMIN') %}
