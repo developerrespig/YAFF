@@ -75,5 +75,15 @@
 
           return $response;
         }
+
+        public function setModeAction($mode, $device) {
+          $command = "set " . $device . " controlMode " . $mode;
+          $url = $this->service->getUrl($command);
+          $response = $this->service->createRequest($url);
+          $response->headers->set('Content-Type', 'text/html; charset=UTF-8');
+          $response->setContent("OK");
+
+          return $response;
+        }
     }
 ?>

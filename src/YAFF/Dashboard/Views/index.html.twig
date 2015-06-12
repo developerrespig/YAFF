@@ -503,10 +503,10 @@
             },
 
             setNewTemp: function(device) {
-              yaff.dashboard.setDisableRadiatorButtons(device, true);
               var input = $('#' + device + '-input');
               var url = "{{ path('yaff.fhem.radiator.set.desiredTemp', {device: 'placeholderDevice', temp: 'placeholderTemp'}) }}";
               url = url.replace('placeholderDevice', device).replace('placeholderTemp', input.val());
+              yaff.dashboard.setDisableRadiatorButtons(device, true);
 
               $.get(url, function() {
                 yaff.util.log("Value set successful");
@@ -515,10 +515,10 @@
             },
 
             setNewMode: function(device, mode) {
-              yaff.dashboard.setDisableRadiatorButtons(device, true);
               var input = $('#' + device + '-input');
               var url = "{{ path('yaff.fhem.radiator.set.mode', {device: 'placeholderDevice', mode: 'placeholderMode'}) }}";
               url = url.replace('placeholderDevice', device).replace('placeholderMode', mode);
+              yaff.dashboard.setDisableRadiatorButtons(device, true);
 
               $.get(url, function() {
                 yaff.util.log("Value set successful");
