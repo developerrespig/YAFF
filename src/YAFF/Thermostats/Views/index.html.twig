@@ -19,8 +19,28 @@
                                   <div class="panel-heading">
                                       {{ thermostat }} <span id="{{ thermostat }}-busy">({{ 'thermostat.busy'|trans }})</span>
                                   </div>
-                                  <div class="panel-body" name="thermostat" id="{{ thermostat }}">
-                                    <img src="{{ app.request.basepath }}/resources/images/ajax-loader.gif" />
+                                  <div class="panel-body">
+                                    <div class="row">
+                                      <div class="col-sm-10 col-md-offset-1" name="thermostat" id="{{ thermostat }}">
+                                        <div id="{{ thermostat }}-modes">
+                                          <img src="{{ app.request.basepath }}/resources/images/ajax-loader.gif" />
+                                        </div>
+                                        <hr>
+                                        <form class="form-horizontal">
+                                          <div class="form-group">
+                                            <label for="{{ thermostat }}-current-state" class="col-sm-4 control-label">{{ 'thermostat.state'|trans }}</label>
+                                            <div class="col-sm-8">
+                                              <input class="form-control" type="text" id="{{ thermostat }}-current-state" placeholder="Loading" id="desired-temp" disabled>
+                                            </div>
+                                            <label for="{{ thermostat }}-temp-dropdown" class="col-sm-4 control-label">{{ 'thermostat.temperature.target'|trans }}</label>
+                                            <div class="col-sm-8">
+                                              <select class="form-control" id="{{ thermostat }}-temp-dropdown">
+                                              </select>
+                                            </div>
+                                          </div>
+                                        </form>
+                                      </div>
+                                    </div>
                                   </div>
                               </div>
                           </div>
@@ -35,70 +55,129 @@
     {{ parent() }}
     <script>
       yaff.thermostats = {
-        loadHandler: null,
+        refreshHandler: null,
 
-        load: function() {
+        getModeButtonsHtml: function(jsonDevice) {
+          var html = '';
+          var device = yaff.util.homematicGetDeviceName(jsonDevice);
+          var currentMode = yaff.util.homematicGetCurrentMode(jsonDevice);
+          var currentDeviceStatus = yaff.util.homematicGetCurrentStatus(jsonDevice);
+          var modesArray = yaff.util.homematicGetPossibleModes(jsonDevice);
+          $.each(modesArray, function(index, value) {
+            var cssClass = 'btn-default';
+            var disabled = '';
+            if(currentDeviceStatus.indexOf("set") != -1) {
+              $('#' + device + '-busy').show();
+              disabled = 'disabled';
+            } else {
+              $('#' + device + '-busy').hide();
+              if(currentMode == value) {
+                cssClass = 'btn-success';
+              }
+            }
+
+            html = html + '<button name="mode-button-' + device + '" class="btn ' + cssClass + '" type="submit" onclick="yaff.thermostats.setNewMode(this, \'' + device + '\', \'' + value + '\')" ' + disabled + '>' + value + '</button>';
+          });
+
+          return html;
+        },
+
+        addPossibleTemperatureOptions: function(jsonDevice) {
+          var device = yaff.util.homematicGetDeviceName(jsonDevice);
+          var desiredTemp = yaff.util.homematicGetDesiredTemp(jsonDevice);
+          var possibleTemps = yaff.util.homematicGetPossibleTemps(jsonDevice);
+          $.each(possibleTemps, function(idx, value) {
+            var selected = '';
+            if(desiredTemp == value) {
+              selected = 'selected';
+            }
+            $('#' + device + '-temp-dropdown').append('<option value="' + value + '"' + selected + '>' + value + '</option>');
+          });
+          $('#' + device + '-temp-dropdown').change(function() {
+            yaff.thermostats.setNewTemp(device);
+          });
+        },
+
+        refresh: function() {
           $("[name='thermostat']").each(function(idx, obj) {
             var url = "{{ path('yaff.fhem.getDevice', {device: 'placeholder'}) }}";
             url = url.replace('placeholder', obj.id);
 
             $.get(url, function(data) {
-              // TODO: Refactoring -> Codedoppelung in index.html.twig
               data = JSON.parse(data);
               var result = data.Results[0];
-              var possibleSets = result.PossibleSets.split(' ');
-              var possibleTemps = result.PossibleSets.split(' ')[2].split(',');
-              possibleTemps[0] = possibleTemps[0].split(':')[1];
-              possibleTemps.push(possibleTemps[0]);
-              possibleTemps.splice(0, 1);
-              var modesArray = possibleSets[3].split(',');
-              modesArray[0] = modesArray[0].split(':')[1];
+              var modesContainer = $('#' + obj.id + '-modes');
 
-              var html = "";
-              var currentMode = result.Readings['controlMode'].Value;
-              var currentDeviceStatus = result.Readings.state.Value;
+              var html = yaff.thermostats.getModeButtonsHtml(result);
+              modesContainer.html(html);
 
-              $.each(modesArray, function(index, value) {
-                var cssClass = 'btn-default';
-                var disabled = '';
-                if(currentDeviceStatus.indexOf("set") != -1) {
-                  $('#' + obj.id + '-busy').show();
-                  disabled = 'disabled';
-                } else {
-                  $('#' + obj.id + '-busy').hide();
-                  if(currentMode == value) {
-                    cssClass = 'btn-success';
-                  }
+              var dropdownContainer = $('#' + obj.id + '-temp-dropdown');
+              var dropdownOptions = $('#' + obj.id + '-temp-dropdown option');
+
+              if(dropdownOptions.length == 0) {
+                yaff.thermostats.addPossibleTemperatureOptions(result);
+              }
+
+              var currentState = yaff.util.homematicGetCurrentStatus(result);
+              var desiredTemp = yaff.util.homematicGetDesiredTemp(result);
+              if(currentState.indexOf("set") != -1) {
+                yaff.thermostats.deactivateForm(yaff.util.homematicGetDeviceName(result));
+              } else {
+                if(dropdownContainer.val() == 'Setting') {
+                  $(dropdownContainer).find(':selected').remove();
                 }
+                dropdownContainer.val(desiredTemp);
+                dropdownContainer.prop('disabled', false);
+              }
 
-                html = html + '<button name="mode-button-' + obj.id + '" class="btn ' + cssClass + '" type="submit" onclick="yaff.thermostats.setNewMode(this, \'' + obj.id + '\', \'' + value + '\')" ' + disabled + '>' + value + '</button>';
-              });
-              html = html + '<hr>';
-              $(obj).html(html);
+              var currentStateInput = $('#' + obj.id + '-current-state');
+              currentStateInput.val(currentState);
             });
           });
-          yaff.thermostats.loadHandler = setTimeout(yaff.thermostats.load, 30000);
+
+          yaff.thermostats.refreshHandler = setTimeout(yaff.thermostats.refresh, 30000);
         },
 
         setNewMode: function(obj, device, mode) {
-          debugger;
+          clearTimeout(yaff.thermostats.refreshHandler);
           $(obj).addClass('btn-info');
-          $("[name='mode-button-" + device + "']").each(function(index, button) {
-            $(button).prop('disabled', true);
-          });
-          clearTimeout(yaff.thermostats.loadHandler);
           var url = "{{ path('yaff.fhem.radiator.set.mode', {device: 'placeholderDevice', mode: 'placeholderMode'}) }}";
           url = url.replace('placeholderDevice', device).replace('placeholderMode', mode);
+          yaff.thermostats.deactivateForm(device);
 
           $.get(url, function() {
-            yaff.thermostats.load();
+            yaff.thermostats.refresh();
             yaff.util.log("Value set successful");
           })
         },
+
+        setNewTemp: function(device) {
+          clearTimeout(yaff.thermostats.refreshHandler);
+          var select = $('#' + device + '-temp-dropdown');
+          var url = "{{ path('yaff.fhem.radiator.set.desiredTemp', {device: 'placeholderDevice', temp: 'placeholderTemp'}) }}";
+          url = url.replace('placeholderDevice', device).replace('placeholderTemp', select.val());
+          yaff.thermostats.deactivateForm(device);
+
+          $.get(url, function() {
+            yaff.thermostats.refresh();
+            yaff.util.log("Value set successful");
+          })
+        },
+
+        deactivateForm: function(device) {
+          $("[name='mode-button-" + device + "']").each(function(index, button) {
+            $(button).prop('disabled', true);
+          });
+          var dropdownContainer = $('#' + device + '-temp-dropdown');
+          dropdownContainer.prop('disabled', true);
+          if(dropdownContainer.val() != 'Setting') {
+            $(dropdownContainer).append('<option value="Setting" selected>Setting</option>');
+          }
+        }
       };
 
       $(document).ready(function() {
-        yaff.thermostats.load();
+        yaff.thermostats.refresh();
       });
     </script>
 {% endblock %}

@@ -33,6 +33,44 @@
 
                 log: function(message) {
                     console.log(message);
+                },
+
+                homematicGetPossibleSets: function(deviceJson) {
+                  return deviceJson.PossibleSets.split(' ');
+                },
+
+                homematicGetPossibleTemps: function(deviceJson) {
+                  var possibleSets = yaff.util.homematicGetPossibleSets(deviceJson);
+                  var possibleTemps = deviceJson.PossibleSets.split(' ')[2].split(',');
+                  possibleTemps[0] = possibleTemps[0].split(':')[1];
+                  possibleTemps.push(possibleTemps[0]);
+                  possibleTemps.splice(0, 1);
+
+                  return possibleTemps;
+                },
+
+                homematicGetPossibleModes: function(deviceJson) {
+                  var possibleSets = yaff.util.homematicGetPossibleSets(deviceJson);
+                  var modesArray = possibleSets[3].split(',');
+                  modesArray[0] = modesArray[0].split(':')[1];
+
+                  return modesArray;
+                },
+
+                homematicGetCurrentMode: function(deviceJson) {
+                  return deviceJson.Readings['controlMode'].Value;
+                },
+
+                homematicGetCurrentStatus: function(deviceJson) {
+                  return deviceJson.Readings.state.Value;
+                },
+
+                homematicGetDesiredTemp: function(jsonDevice) {
+                  return jsonDevice.Readings['desired-temp'].Value;
+                },
+
+                homematicGetDeviceName: function(jsonDevice) {
+                  return jsonDevice.Name;
                 }
             }
         </script>
