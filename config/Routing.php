@@ -38,6 +38,16 @@
         ->bind('yaff.dashboard.move.widget');
 
     /**
+     * Thermostats overview
+     */
+     $app['yaff.thermostats'] = $app->share(function () use ($app) {
+             return new YAFF\Thermostats\Controller\ThermostatsServiceController($app);
+     });
+
+     $app->get('/thermostats', "yaff.thermostats:indexAction")
+         ->bind('yaff.thermostats');
+
+    /**
      * Login
      */
     $app['user.login'] = $app->share(function () use ($app) {

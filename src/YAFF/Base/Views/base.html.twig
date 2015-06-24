@@ -22,20 +22,58 @@
         <script type="text/javascript" src="{{ app.request.basepath }}/resources/js/bootstrap-datetimepicker.min.js"></script>
         <script>
             var yaff = yaff || {};
-            
+
             yaff.util = {
                 setContentModalLoading: function(id) {
                     var content = '<div class="modal-body">' + this.getLoadingAnimation() + '</div>';
                     $(id).html(content);
                 },
-                        
+
                 getLoadingAnimation: function() {
                     var img = '<img src="{{ app.request.basepath }}/resources/images/ajax-loader.gif" />';
                     return img;
                 },
-                
+
                 log: function(message) {
                     console.log(message);
+                },
+
+                homematicGetPossibleSets: function(deviceJson) {
+                  return deviceJson.PossibleSets.split(' ');
+                },
+
+                homematicGetPossibleTemps: function(deviceJson) {
+                  var possibleSets = yaff.util.homematicGetPossibleSets(deviceJson);
+                  var possibleTemps = deviceJson.PossibleSets.split(' ')[2].split(',');
+                  possibleTemps[0] = possibleTemps[0].split(':')[1];
+                  possibleTemps.push(possibleTemps[0]);
+                  possibleTemps.splice(0, 1);
+
+                  return possibleTemps;
+                },
+
+                homematicGetPossibleModes: function(deviceJson) {
+                  var possibleSets = yaff.util.homematicGetPossibleSets(deviceJson);
+                  var modesArray = possibleSets[3].split(',');
+                  modesArray[0] = modesArray[0].split(':')[1];
+
+                  return modesArray;
+                },
+
+                homematicGetCurrentMode: function(deviceJson) {
+                  return deviceJson.Readings['controlMode'].Value;
+                },
+
+                homematicGetCurrentStatus: function(deviceJson) {
+                  return deviceJson.Readings.state.Value;
+                },
+
+                homematicGetDesiredTemp: function(jsonDevice) {
+                  return jsonDevice.Readings['desired-temp'].Value;
+                },
+
+                homematicGetDeviceName: function(jsonDevice) {
+                  return jsonDevice.Name;
                 }
             }
             
@@ -83,7 +121,8 @@
             </div>
             <div style="" aria-expanded="true" class="navbar-collapse navbar-inverse-collapse collapse in">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ path('yaff.dashboard') }}">{{ 'nav.dashboard'|trans }}</a></li>
+                  <li><a href="{{ path('yaff.dashboard') }}">{{ 'nav.dashboard'|trans }}</a></li>
+                  <li><a href="{{ path('yaff.thermostats') }}">{{ 'nav.thermostats'|trans }}</a></li>
                     <li><a href="#" onclick="yaff.partymode.getPartySetupModal()" data-toggle="modal" data-target="#newPartyModal">{{ 'nav.partymode'|trans }}</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
