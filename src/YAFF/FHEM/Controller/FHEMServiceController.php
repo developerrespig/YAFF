@@ -35,17 +35,55 @@
         }
 
         public function getDeviceAction($device) {
-            $command = "jsonlist2 " . $device;
-            $url = $this->service->getUrl($command);
-            if($url) {
-                $response = $this->service->createRequest($url);
-            } else {
-                $response = new Response(
-                    "No Config found!",
-                    500);
-            }
+          $response = new Response();
+          $jsonString = $this->service->getDevice($device);
 
-            return $response;
+          $response->setContent($jsonString);
+          $response->setStatusCode(200);
+
+          return $response;
+        }
+
+        public function switchToggleAction($device)
+        {
+          $response = new Response();
+          $response->setStatusCode(500);
+
+          $ret = $this->service->toggleSwitch($device);
+          if ($ret) {
+            $response->setStatusCode(200);
+          }
+
+          return $response;
+        }
+
+        public function getDeviceStateAction($device)
+        {
+          $response = new Response();
+          $response->setStatusCode(200);
+          $response->setContent($this->service->getDeviceStatus($device));
+
+          return $response;
+        }
+
+        public function setDesiredTempAction($temp, $device) {
+          $command = "set " . $device . " desired-temp " . $temp;
+          $url = $this->service->getUrl($command);
+          $response = $this->service->createRequest($url);
+          $response->headers->set('Content-Type', 'text/html; charset=UTF-8');
+          $response->setContent("OK");
+
+          return $response;
+        }
+
+        public function setModeAction($mode, $device) {
+          $command = "set " . $device . " controlMode " . $mode;
+          $url = $this->service->getUrl($command);
+          $response = $this->service->createRequest($url);
+          $response->headers->set('Content-Type', 'text/html; charset=UTF-8');
+          $response->setContent("OK");
+
+          return $response;
         }
     }
 ?>

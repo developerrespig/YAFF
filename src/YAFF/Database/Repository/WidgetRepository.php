@@ -20,7 +20,7 @@ class WidgetRepository extends EntityRepository
     {
         return $this->findBy(array(), array('idx' => 'ASC'));
     }
-    
+
     /**
      * Returns the widget which is on the left side of the widget with the given id
      * @param type $id
@@ -33,7 +33,7 @@ class WidgetRepository extends EntityRepository
         $criteria->setMaxResults(1);
         return $this->matching($criteria);
     }
-    
+
     /**
      * Returns the widget which is on the right side of the widget with the given id
      * @param type $id
